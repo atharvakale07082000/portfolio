@@ -1,0 +1,62 @@
+Atharva Shripad Kale
+Senior Backend & AI Engineer
+Phone: +919326266521
+Email: atharva.skale07@gmail.com
+LinkedIn: linkedin.com/in/atharva-kale-7b0b53177
+GitHub: github.com/atharvakale07082000
+
+SUMMARY
+Passionate Senior Backend & AI Engineer with expertise in Generative AI, Agentic AI, and scalable backend architectures. Proven track record of architecting RAG pipelines, optimizing microservices, and leading AI roadmaps. Experienced in building high-performance systems using Python, FastAPI, and Vector Databases.
+
+SKILLS
+- Core Skills: Python, Generative AI (GenAI), Agentic AI, LLMs (OpenAI, LLaMA, Mistral), RAG Pipelines, Vector Databases (Pinecone, FAISS), LangChain, LangGraph, CrewAI.
+- Frameworks & Libraries: FastAPI, Flask, Pandas, NumPy, Celery, Hugging Face, Boto3, REST APIs, PyTorch (basic).
+- Databases & Search: MongoDB, PostgreSQL, Redis, DocumentDB, MongoDB Atlas, Elasticsearch.
+- Cloud & DevOps: AWS (EC2, S3, Lambda, RDS, DynamoDB), Docker, Kubernetes, Terraform, GitHub Actions, CI/CD Pipelines.
+- Collaboration & Tools: Git, Jira, Confluence, Notion, Agile/Scrum.
+
+EXPERIENCE
+
+Senior Backend & AI Engineer | Anervea Data Labs
+August 2025 – Present | Pune, Maharashtra
+- Leading backend and AI architecture for AlfaKinetic, a GenAI-driven Competitive Intelligence platform delivering real-time business insights.
+- Architected RAG pipelines using LangChain, Hugging Face, and Vector DBs (Pinecone, Qdrant), cutting data retrieval latency by 60%.
+- Designed scalable Python microservices with FastAPI, Kafka, and Celery, enabling 10× higher throughput for data ingestion and semantic search.
+- Partnered with leadership and stakeholders to define the GenAI roadmap, and mentored engineers on LLM system design and CI/CD automation.
+
+Backend Engineer | Anervea Data Labs
+September 2024 – August 2025 | Pune, Maharashtra
+- Developed high-performance REST APIs and backend workflows, reducing API latency from 7s to <100ms.
+- Built automated data extraction systems using Playwright, Celery, and Selenium, boosting research throughput by 3×.
+- Implemented resilient ETL pipelines and integrated MongoDB + Redis for low-latency, real-time data analytics.
+- Collaborated cross-functionally to deliver backend automation and competitive intelligence features under tight timelines.
+
+Python Full Stack Developer Intern | Netra Labs
+August 2024 - September 2024 | Pune, Maharashtra
+- Reduced front-end load times by 25% using modern JavaScript frameworks such as NextJS and ReactQuery, improving usability and engagement by 15% in data analytics applications.
+
+PROJECTS
+
+Resume Screening and Similarity Analysis
+Aug 2023 - Dec 2023
+- Developed a supervised learning algorithm using NLP and word cloud analysis for resume screening, achieving 94% testing accuracy.
+- Built and fine-tuned machine learning models with Python and TensorFlow, increasing prediction accuracy by 15%.
+
+Sentiment Analysis of Amazon Reviews
+Feb 2023 - Apr 2023
+- Built an NLP-based sentiment analysis model using Google BigQuery for data warehousing, achieving 92.22% accuracy.
+- Validated review authenticity and provided actionable insights into consumer behavior.
+
+EDUCATION
+
+Master of Science (M.S.), Computer Science
+MIT World Peace University | August 2022 - May 2024
+CGPA: 8.14
+
+Bachelors of Computer Science (BSc CS)
+Ramnarain Ruia Autonomous College | June 2018 - May 2021
+CGPA: 7.33
+
+CERTIFICATIONS
+- AWS Machine Learning Foundations (May 2024 - June 2024)
+- Professional Certificate in Cloud Native technologies (Kubernetes and Docker) (Jan 2024 - Feb 2024)
