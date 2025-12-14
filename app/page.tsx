@@ -77,7 +77,7 @@ export default function Home() {
                                 <Linkedin size={24} />
                             </a>
                             <a
-                                href="/resume.pdf"
+                                href="/Atharva_Kale_CV.pdf"
                                 download
                                 className="p-4 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all"
                                 title="Download Resume"
