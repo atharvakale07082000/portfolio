@@ -21,7 +21,7 @@ export default function Footer() {
                         <Github size={20} />
                     </a>
                     <a
-                        href="https://linkedin.com/in/atharva-kale-7b0b53177"
+                        href="https://www.linkedin.com/in/atharva-kale-7b0b53177/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-300 hover:text-primary transition-all"

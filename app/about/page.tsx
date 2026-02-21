@@ -1,92 +1,85 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Code, Database, Brain, Terminal, Cloud, Globe } from "lucide-react";
+import { Database, Brain, Terminal, Cloud } from "lucide-react";
 
 const skills = [
     {
-        category: "Generative AI & LLMs",
-        icon: <Brain className="w-6 h-6 text-primary" />,
-        items: ["OpenAI", "LLaMA", "Mistral", "RAG Pipelines", "LangChain", "LangGraph", "CrewAI", "Pinecone", "FAISS"],
+        category: "Generative AI",
+        icon: <Brain strokeWidth={1.5} />,
+        items: "OpenAI, LLaMA, Mistral, RAG, LangChain, CrewAI, Pinecone, FAISS",
     },
     {
-        category: "Backend Engineering",
-        icon: <Terminal className="w-6 h-6 text-secondary" />,
-        items: ["Python", "FastAPI", "Flask", "Celery", "Kafka", "REST APIs", "Microservices"],
+        category: "Backend",
+        icon: <Terminal strokeWidth={1.5} />,
+        items: "Python, FastAPI, Flask, Celery, Kafka, REST, Microservices",
     },
     {
-        category: "Cloud & DevOps",
-        icon: <Cloud className="w-6 h-6 text-blue-400" />,
-        items: ["AWS (EC2, S3, Lambda)", "Docker", "Kubernetes", "Terraform", "GitHub Actions", "CI/CD"],
+        category: "Cloud",
+        icon: <Cloud strokeWidth={1.5} />,
+        items: "AWS, Docker, Kubernetes, Terraform, CI/CD",
     },
     {
         category: "Databases",
-        icon: <Database className="w-6 h-6 text-purple-400" />,
-        items: ["PostgreSQL", "MongoDB", "Redis", "Elasticsearch", "DocumentDB"],
+        icon: <Database strokeWidth={1.5} />,
+        items: "PostgreSQL, MongoDB, Redis, Elasticsearch",
     },
 ];
 
 export default function AboutPage() {
     return (
-        <div className="min-h-screen pt-24 pb-20">
-            <div className="container mx-auto px-6">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="max-w-4xl mx-auto"
-                >
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-8">About Me</h1>
+        <div className="min-h-screen py-16 md:py-32 px-4 md:px-6">
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="max-w-4xl mx-auto bg-white rounded-[2.5rem] shadow-[0_30px_60px_rgba(0,0,0,0.12)] border border-gray-100 overflow-hidden"
+            >
+                <div className="px-8 py-16 md:px-20 md:py-24">
+                    <h1 className="text-4xl md:text-6xl font-black tracking-tight text-black mb-12">
+                        ABOUT.
+                    </h1>
 
-                    <div className="bg-white/5 border border-white/10 rounded-2xl p-8 mb-12 backdrop-blur-sm">
-                        <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                            I am a <span className="text-primary font-semibold">Senior Backend & AI Engineer</span> based in Pune, Maharashtra.
-                            Currently, I lead the backend and AI architecture at <span className="text-secondary font-semibold">Anervea Data Labs</span>,
-                            building next-gen competitive intelligence platforms driven by Generative AI.
+                    <div className="space-y-8 text-lg md:text-xl text-gray-700 font-medium leading-[1.8]">
+                        <p>
+                            I am a <span className="text-black font-bold">Senior Backend & AI Engineer</span> based in Pune, Maharashtra.
+                            Currently, I navigate the complexities of AI architecture at <span className="text-blue-600 font-bold">Anervea Data Labs</span>.
                         </p>
-                        <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                            My expertise lies in architecting scalable RAG pipelines, optimizing high-throughput microservices, and deploying
-                            production-ready AI agents. I bridge the gap between complex ML research and robust software engineering,
-                            ensuring that intelligent systems are not just theoretical, but performant and reliable.
+                        <p>
+                            My focus is strictly on the intersection of deep machine learning logic and scalable software systems. I build structures that turn theoretical generative models into high-throughput, latency-optimized production value.
                         </p>
-                        <p className="text-gray-300 text-lg leading-relaxed">
-                            I hold a Master's in Computer Science from MIT World Peace University and have a strong foundation in
-                            cloud-native technologies, having earned certifications in Kubernetes and AWS Machine Learning.
+                        <p>
+                            Holding a Master's in Computer Science from MIT World Peace University and certified in AWS Machine Learning, my engineering philosophy revolves around rigorous simplicity—removing the friction between huge data streams and real-time user insights.
                         </p>
                     </div>
 
-                    <h2 className="text-3xl font-bold text-white mb-8">Technical Arsenal</h2>
+                    <hr className="my-16 border-gray-200" />
 
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <h2 className="text-2xl font-bold tracking-tight text-black mb-10">
+                        TECHNICAL ARSENAL
+                    </h2>
+
+                    <div className="flex flex-col space-y-6">
                         {skills.map((skill, index) => (
                             <motion.div
                                 key={skill.category}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                className="bg-navy/50 border border-white/10 rounded-xl p-6 hover:border-primary/50 transition-colors group"
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6, delay: 0.2 + (index * 0.1), ease: [0.16, 1, 0.3, 1] }}
+                                className="group flex flex-col md:flex-row md:items-start gap-4 p-4 -ml-4 rounded-2xl hover:bg-gray-50 transition-colors"
                             >
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className="p-3 rounded-lg bg-white/5 group-hover:bg-primary/10 transition-colors">
-                                        {skill.icon}
-                                    </div>
-                                    <h3 className="text-xl font-semibold text-white">{skill.category}</h3>
+                                <div className="text-gray-400 group-hover:text-blue-600 transition-colors mt-1">
+                                    {skill.icon}
                                 </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {skill.items.map((item) => (
-                                        <span
-                                            key={item}
-                                            className="px-3 py-1 rounded-full bg-white/5 text-sm text-gray-300 border border-white/5"
-                                        >
-                                            {item}
-                                        </span>
-                                    ))}
+                                <div>
+                                    <h3 className="text-lg font-bold text-black tracking-tight">{skill.category}</h3>
+                                    <p className="text-gray-500 font-medium mt-1 leading-relaxed">{skill.items}</p>
                                 </div>
                             </motion.div>
                         ))}
                     </div>
-                </motion.div>
-            </div>
+                </div>
+            </motion.div>
         </div>
     );
 }
