@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Calendar } from "lucide-react";
 
 interface ExperienceItem {
     id: number;
@@ -57,34 +56,36 @@ const experiences: ExperienceItem[] = [
 
 export default function ExperienceTimeline() {
     return (
-        <div className="relative border-l border-white/10 ml-3 md:ml-6 space-y-12">
+        <div className="space-y-16">
             {experiences.map((exp, index) => (
                 <motion.div
                     key={exp.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.2 }}
-                    className="relative pl-8 md:pl-12"
+                    initial={{ opacity: 0.3, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ margin: "-20% 0px -20% 0px" }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    className="relative pl-6 sm:pl-10 group"
                 >
-                    {/* Dot */}
-                    <div className="absolute -left-[5px] top-2 w-3 h-3 rounded-full bg-primary ring-4 ring-navy" />
+                    {/* The refined dot marker */}
+                    <div className="absolute left-0 top-2.5 w-[8px] h-[8px] sm:w-[12px] sm:h-[12px] rounded-full bg-white border-[2px] border-gray-300 group-hover:border-blue-600 group-hover:bg-blue-600 transition-colors duration-500 hidden sm:block" />
 
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
-                        <h3 className="text-xl font-bold text-white">{exp.role}</h3>
-                        <span className="hidden sm:inline text-gray-600">•</span>
-                        <span className="text-primary font-medium">{exp.company}</span>
+                    <div className="mb-4">
+                        <h3 className="text-2xl font-black tracking-tight text-black leading-tight mb-2 group-hover:text-blue-600 transition-colors">
+                            {exp.role}
+                        </h3>
+                        <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
+                            <span className="text-gray-800 font-bold tracking-tight text-lg">{exp.company}</span>
+                            <span className="hidden sm:inline text-gray-300">•</span>
+                            <span className="text-gray-500 font-medium text-sm tracking-wide opacity-80">{exp.period}</span>
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-                        <Calendar size={14} />
-                        {exp.period}
-                        <span className="text-gray-600">|</span>
-                        <span>{exp.location}</span>
-                    </div>
-
-                    <ul className="list-disc list-outside ml-4 text-gray-300 mb-4 space-y-2">
+                    <ul className="space-y-3 mb-6 text-gray-600 text-[1.05rem] leading-[1.7] font-medium">
                         {exp.description.map((item, i) => (
-                            <li key={i} className="leading-relaxed">{item}</li>
+                            <li key={i} className="pl-4 relative">
+                                <span className="absolute left-0 top-2.5 w-1 h-1 rounded-full bg-gray-300" />
+                                {item}
+                            </li>
                         ))}
                     </ul>
 
@@ -92,7 +93,7 @@ export default function ExperienceTimeline() {
                         {exp.technologies.map((tech) => (
                             <span
                                 key={tech}
-                                className="px-2 py-1 rounded text-xs font-medium bg-white/5 text-secondary border border-white/5"
+                                className="px-2.5 py-1 bg-gray-50 text-gray-600 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors border border-gray-100 text-xs font-bold uppercase tracking-wider rounded-md"
                             >
                                 {tech}
                             </span>

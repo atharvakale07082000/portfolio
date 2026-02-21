@@ -22,9 +22,12 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className="scroll-smooth">
-            <body className={`${inter.variable} antialiased min-h-screen flex flex-col`}>
+            <body className={`${inter.variable} antialiased min-h-screen flex flex-col relative z-0`}>
+                {/* Global Ethereal Mesh Background */}
+                <div className="mesh-bg"></div>
+
                 <Navbar />
-                <main className="flex-grow">
+                <main className="flex-grow pt-40 relative z-10 w-full">
                     {children}
                 </main>
                 <Footer />

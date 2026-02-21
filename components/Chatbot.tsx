@@ -68,45 +68,51 @@ export default function Chatbot() {
             <motion.button
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setIsOpen(!isOpen)}
-                className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-primary text-white shadow-lg shadow-primary/30 hover:bg-blue-600 transition-colors"
+                className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 brutalist-card font-bold hover:bg-gray-50 transition-colors"
+                style={{ borderRadius: '9999px' }}
             >
-                {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
+                {isOpen ? <X size={20} /> : <MessageCircle size={20} />}
+                <span className="hidden sm:inline uppercase tracking-widest text-xs pt-0.5">{isOpen ? "Close" : "Ask AI"}</span>
             </motion.button>
 
             {/* Chat Window */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                        initial={{ opacity: 0, y: 20, scale: 0.95, originY: 1, originX: 1 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                        className="fixed bottom-24 right-6 z-50 w-[90vw] md:w-[400px] h-[500px] bg-navy border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl"
+                        transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                        className="fixed bottom-24 right-6 z-50 w-[90vw] md:w-[400px] h-[550px] brutalist-card flex flex-col overflow-hidden"
                     >
                         {/* Header */}
-                        <div className="p-4 bg-white/5 border-b border-white/10 flex items-center gap-3">
-                            <div className="p-2 rounded-full bg-primary/20 text-primary">
-                                <Bot size={20} />
+                        <div className="p-5 bg-white border-b border-gray-100 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 rounded-full bg-black text-white">
+                                    <Bot size={20} />
+                                </div>
+                                <div>
+                                    <h3 className="font-black text-black tracking-tighter uppercase text-lg leading-tight">AI Assistant</h3>
+                                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">System Expert</p>
+                                </div>
                             </div>
-                            <div>
-                                <h3 className="font-bold text-white">AI Assistant</h3>
-                                <p className="text-xs text-gray-400">Ask about my experience</p>
-                            </div>
+                            <button onClick={() => setIsOpen(false)} className="p-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-black transition-colors">
+                                <X size={20} />
+                            </button>
                         </div>
 
                         {/* Messages */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+                        <div className="flex-1 bg-gray-50 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
                             {messages.length === 0 && (
-                                <div className="text-center text-gray-400 mt-10 text-sm">
-                                    <p>Hi! I'm an AI trained on Atharva's resume.</p>
-                                    <p className="mt-2">Ask me anything like:</p>
-                                    <ul className="mt-2 space-y-1 text-primary/80">
-                                        <li>"What are your top skills?"</li>
-                                        <li>"Tell me about your RAG project."</li>
-                                        <li>"Do you know Python?"</li>
+                                <div className="text-center mt-12 text-sm">
+                                    <p className="font-bold text-gray-800 mb-4 tracking-tight">How can I assist your review?</p>
+                                    <ul className="mt-4 flex flex-col gap-2">
+                                        <li><button onClick={() => setInput("What is Atharva's tech stack?")} className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 hover:border-black font-semibold text-gray-600 hover:text-black transition-colors">What is Atharva's tech stack?</button></li>
+                                        <li><button onClick={() => setInput("Tell me about the RAG pipeline project.")} className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 hover:border-black font-semibold text-gray-600 hover:text-black transition-colors">Tell me about the RAG pipeline project.</button></li>
+                                        <li><button onClick={() => setInput("Are you available for freelance work?")} className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 hover:border-black font-semibold text-gray-600 hover:text-black transition-colors">Are you available for freelance work?</button></li>
                                     </ul>
                                 </div>
                             )}
@@ -122,17 +128,17 @@ export default function Chatbot() {
                                     <div
                                         className={clsx(
                                             "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
-                                            m.role === "user" ? "bg-white/10 text-white" : "bg-primary/20 text-primary"
+                                            m.role === "user" ? "hidden" : "bg-black text-white"
                                         )}
                                     >
                                         {m.role === "user" ? <User size={14} /> : <Bot size={14} />}
                                     </div>
                                     <div
                                         className={clsx(
-                                            "p-3 rounded-2xl text-sm leading-relaxed",
+                                            "p-3.5 rounded-2xl text-sm leading-relaxed font-medium shadow-sm",
                                             m.role === "user"
-                                                ? "bg-primary text-white rounded-tr-none"
-                                                : "bg-white/5 text-gray-200 rounded-tl-none border border-white/5"
+                                                ? "bg-blue-600 text-white rounded-br-sm"
+                                                : "bg-white text-gray-800 rounded-bl-sm border border-gray-200"
                                         )}
                                     >
                                         {m.content}
@@ -141,11 +147,11 @@ export default function Chatbot() {
                             ))}
                             {isLoading && (
                                 <div className="flex gap-3 mr-auto max-w-[85%]">
-                                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-primary/20 text-primary">
+                                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-blue-100 text-blue-600">
                                         <Bot size={14} />
                                     </div>
-                                    <div className="p-3 rounded-2xl bg-white/5 text-gray-200 rounded-tl-none border border-white/5 flex items-center">
-                                        <Loader2 size={16} className="animate-spin text-primary" />
+                                    <div className="p-3 rounded-2xl bg-white text-gray-800 rounded-tl-none border border-gray-200 flex items-center">
+                                        <Loader2 size={16} className="animate-spin text-blue-600" />
                                     </div>
                                 </div>
                             )}
@@ -153,18 +159,18 @@ export default function Chatbot() {
                         </div>
 
                         {/* Input */}
-                        <form onSubmit={handleSubmit} className="p-4 border-t border-white/10 bg-white/5">
-                            <div className="relative">
+                        <form onSubmit={handleSubmit} className="p-4 bg-white border-t border-gray-100 relative">
+                            <div className="relative flex items-center">
                                 <input
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
-                                    placeholder="Ask a question..."
-                                    className="w-full bg-navy/50 border border-white/10 rounded-full py-3 pl-4 pr-12 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors placeholder:text-gray-500"
+                                    placeholder="Type a message..."
+                                    className="w-full bg-gray-50 border border-gray-200 focus:border-black rounded-full py-3.5 pl-5 pr-14 text-sm text-black focus:outline-none transition-all placeholder:text-gray-400 font-medium"
                                 />
                                 <button
                                     type="submit"
                                     disabled={isLoading || !input.trim()}
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-primary text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
+                                    className="absolute right-1.5 p-2 rounded-full bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-800 transition-colors"
                                 >
                                     <Send size={16} />
                                 </button>

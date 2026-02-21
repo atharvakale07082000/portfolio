@@ -1,8 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Github, ExternalLink, Folder } from "lucide-react";
-import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 
 interface ProjectProps {
     title: string;
@@ -10,67 +9,62 @@ interface ProjectProps {
     tags: string[];
     githubUrl?: string;
     demoUrl?: string;
+    year?: string;
     index: number;
 }
 
-export default function ProjectCard({ title, description, tags, githubUrl, demoUrl, index }: ProjectProps) {
+export default function ProjectCard({ title, description, tags, githubUrl, demoUrl, year, index }: ProjectProps) {
+    const link = demoUrl || githubUrl || "#";
+
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
+        <motion.a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="group relative bg-navy/50 border border-white/10 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 flex flex-col h-full"
+            transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+            className="group block border-b border-gray-100 last:border-0 py-6 md:py-8 hover:bg-gray-50 transition-colors -mx-4 px-4 sm:-mx-8 sm:px-8 rounded-2xl"
         >
-            <div className="p-6 flex flex-col h-full">
-                <div className="flex justify-between items-start mb-4">
-                    <div className="p-3 rounded-lg bg-white/5 text-primary group-hover:bg-primary/10 transition-colors">
-                        <Folder size={24} />
-                    </div>
-                    <div className="flex gap-3">
-                        {githubUrl && (
-                            <a
-                                href={githubUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-white transition-colors"
-                                title="View Source"
-                            >
-                                <Github size={20} />
-                            </a>
-                        )}
-                        {demoUrl && (
-                            <a
-                                href={demoUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-400 hover:text-white transition-colors"
-                                title="Live Demo"
-                            >
-                                <ExternalLink size={20} />
-                            </a>
-                        )}
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-4 items-baseline">
+                {/* Year */}
+                <div className="col-span-1 text-sm font-bold text-gray-400 group-hover:text-blue-600 transition-colors">
+                    {year || "2024"}
                 </div>
 
-                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">
-                    {title}
-                </h3>
+                {/* Title & Description */}
+                <div className="col-span-4">
+                    <h3 className="text-xl font-black text-black tracking-tight mb-2 group-hover:text-blue-600 transition-colors">
+                        {title}
+                    </h3>
+                    <p className="text-sm text-gray-500 font-medium leading-relaxed block md:hidden mb-4">
+                        {description}
+                    </p>
+                </div>
 
-                <p className="text-gray-400 mb-6 leading-relaxed flex-grow">
-                    {description}
-                </p>
-
-                <div className="flex flex-wrap gap-2 mt-auto">
+                {/* Tags */}
+                <div className="col-span-5 flex flex-wrap gap-2">
                     {tags.map((tag) => (
                         <span
                             key={tag}
-                            className="px-2 py-1 rounded text-xs font-medium bg-white/5 text-gray-300 border border-white/5"
+                            className="px-2.5 py-1 rounded bg-gray-100 text-gray-600 text-[0.65rem] font-bold uppercase tracking-wider group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors"
                         >
                             {tag}
                         </span>
                     ))}
                 </div>
+
+                {/* Link Icon */}
+                <div className="col-span-2 flex justify-start md:justify-end items-center text-gray-400 group-hover:text-blue-600 transition-colors mt-4 md:mt-0">
+                    <span className="text-xs font-bold uppercase tracking-widest mr-2 md:hidden">View Project</span>
+                    <ArrowUpRight strokeWidth={2.5} size={20} className="transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </div>
             </div>
-        </motion.div>
+
+            {/* Desktop Description Tooltip/Subtitle */}
+            <div className="hidden md:block col-span-12 mt-3 text-sm text-gray-500 font-medium leading-relaxed max-w-2xl ml-[8.333%]">
+                {description}
+            </div>
+        </motion.a>
     );
 }
