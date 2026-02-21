@@ -5,6 +5,12 @@ import ProjectCard from "@/components/ProjectCard";
 
 const projects = [
     {
+        title: "Document Intelligence Chatbot (RAG)",
+        description: "Engineered a production-grade RAG system enabling real-time chat over multi-format documents (PDF, DOCX, PPTX) using Google Gemini and vector embeddings. Implemented Server-Sent Events (SSE) for asynchronous response streaming, significantly enhancing the UX during complex document processing. Designed a robust data architecture utilizing MongoDB for session metadata and ChromaDB for high-dimensional vector storage. (Oct 2025 – Dec 2025)",
+        tags: ["Python", "FastAPI", "Next.js 15", "Google Gemini", "ChromaDB", "Docker"],
+        githubUrl: "https://github.com/atharvakale07082000",
+    },
+    {
         title: "AlfaKinetic (Competitive Intelligence Platform)",
         description: "Architected the backend and AI infrastructure for a GenAI-driven platform. Implemented RAG pipelines using LangChain and Vector DBs, reducing retrieval latency by 60%. Designed scalable microservices handling high-throughput data ingestion.",
         tags: ["GenAI", "RAG", "LangChain", "FastAPI", "Kafka", "Pinecone"],

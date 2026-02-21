@@ -37,6 +37,12 @@ August 2024 - September 2024 | Pune, Maharashtra
 
 PROJECTS
 
+Document Intelligence Chatbot (RAG)
+Oct 2025 – Dec 2025
+- Engineered a production-grade RAG system enabling real-time chat over multi-format documents (PDF, DOCX, PPTX) using Google Gemini and vector embeddings.
+- Implemented Server-Sent Events (SSE) for asynchronous response streaming, significantly enhancing the UX during complex document processing.
+- Designed a robust data architecture utilizing MongoDB for session metadata and ChromaDB for high-dimensional vector storage.
+
 Resume Screening and Similarity Analysis
 Aug 2023 - Dec 2023
 - Developed a supervised learning algorithm using NLP and word cloud analysis for resume screening, achieving 94% testing accuracy.
