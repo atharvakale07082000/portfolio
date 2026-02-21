@@ -51,7 +51,7 @@ async def chat(request: ChatRequest):
         """
         
         # Generate response using Gemini
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash')
         
         # Construct chat history for Gemini if needed, or just send the prompt with context
         # For simplicity, we'll just generate content based on the system prompt + user query
