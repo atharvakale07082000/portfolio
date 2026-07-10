@@ -11,8 +11,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-    title: "AI Engineer Portfolio",
-    description: "Portfolio of a Senior Backend & AI Engineer",
+    title: "Atharva Kale — Backend & AI Engineer",
+    description: "Backend & AI engineer building streaming multi-agent systems, RAG pipelines, and high-throughput production infrastructure.",
 };
 
 export default function RootLayout({
@@ -22,12 +22,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className="scroll-smooth">
-            <body className={`${inter.variable} antialiased min-h-screen flex flex-col relative z-0`}>
-                {/* Global Ethereal Mesh Background */}
-                <div className="mesh-bg"></div>
-
+            <body className={`${inter.variable} antialiased min-h-screen flex flex-col`}>
                 <Navbar />
-                <main className="flex-grow pt-40 relative z-10 w-full">
+                <main className="flex-grow w-full">
                     {children}
                 </main>
                 <Footer />

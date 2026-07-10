@@ -13,7 +13,15 @@ interface ProjectProps {
     index: number;
 }
 
-export default function ProjectCard({ title, description, tags, githubUrl, demoUrl, year, index }: ProjectProps) {
+export default function ProjectCard({
+    title,
+    description,
+    tags,
+    githubUrl,
+    demoUrl,
+    year,
+    index,
+}: ProjectProps) {
     const link = demoUrl || githubUrl || "#";
 
     return (
@@ -21,49 +29,50 @@ export default function ProjectCard({ title, description, tags, githubUrl, demoU
             href={link}
             target="_blank"
             rel="noopener noreferrer"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-            className="group block border-b border-gray-100 last:border-0 py-6 md:py-8 hover:bg-gray-50 transition-colors -mx-4 px-4 sm:-mx-8 sm:px-8 rounded-2xl"
+            className="group grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-6 items-baseline py-7 spec-row -mx-4 px-4 rounded-2xl hover:bg-surface transition-colors"
         >
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-4 items-baseline">
-                {/* Year */}
-                <div className="col-span-1 text-sm font-bold text-gray-400 group-hover:text-blue-600 transition-colors">
-                    {year || "2024"}
-                </div>
+            {/* Year */}
+            <div className="md:col-span-1 mono text-[13px] text-muted">{year || "2024"}</div>
 
-                {/* Title & Description */}
-                <div className="col-span-4">
-                    <h3 className="text-xl font-black text-black tracking-tight mb-2 group-hover:text-blue-600 transition-colors">
+            {/* Title + description */}
+            <div className="md:col-span-5">
+                <div className="flex items-center gap-2.5">
+                    <h3 className="text-[19px] font-semibold tracking-tight text-ink group-hover:text-accent transition-colors">
                         {title}
                     </h3>
-                    <p className="text-sm text-gray-500 font-medium leading-relaxed block md:hidden mb-4">
-                        {description}
-                    </p>
-                </div>
-
-                {/* Tags */}
-                <div className="col-span-5 flex flex-wrap gap-2">
-                    {tags.map((tag) => (
-                        <span
-                            key={tag}
-                            className="px-2.5 py-1 rounded bg-gray-100 text-gray-600 text-[0.65rem] font-bold uppercase tracking-wider group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors"
-                        >
-                            {tag}
+                    {demoUrl && (
+                        <span className="mono text-[10px] uppercase tracking-wider text-accent border border-accent/30 rounded-full px-2 py-0.5">
+                            Live
                         </span>
-                    ))}
+                    )}
                 </div>
-
-                {/* Link Icon */}
-                <div className="col-span-2 flex justify-start md:justify-end items-center text-gray-400 group-hover:text-blue-600 transition-colors mt-4 md:mt-0">
-                    <span className="text-xs font-bold uppercase tracking-widest mr-2 md:hidden">View Project</span>
-                    <ArrowUpRight strokeWidth={2.5} size={20} className="transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                </div>
+                <p className="text-[14.5px] text-muted font-normal leading-relaxed mt-2 max-w-xl">
+                    {description}
+                </p>
             </div>
 
-            {/* Desktop Description Tooltip/Subtitle */}
-            <div className="hidden md:block col-span-12 mt-3 text-sm text-gray-500 font-medium leading-relaxed max-w-2xl ml-[8.333%]">
-                {description}
+            {/* Tags */}
+            <div className="md:col-span-5 flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                    <span
+                        key={tag}
+                        className="mono text-[11px] tracking-tight text-muted bg-surface group-hover:bg-white rounded-full px-3 py-1 transition-colors"
+                    >
+                        {tag}
+                    </span>
+                ))}
+            </div>
+
+            {/* Chevron */}
+            <div className="md:col-span-1 flex md:justify-end items-center text-muted group-hover:text-accent transition-colors">
+                <ArrowUpRight
+                    size={19}
+                    className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
             </div>
         </motion.a>
     );

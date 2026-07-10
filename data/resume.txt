@@ -37,6 +37,14 @@ August 2024 - September 2024 | Pune, Maharashtra
 
 PROJECTS
 
+Atelier — AI Tutor Platform
+Jan 2025 – Apr 2025
+- Built an adaptive learning platform powered by a multi-agent ReAct AI system with specialist agents: QuizAgent, CurriculumAgent, ProgressAgent, DoubtAgent, and AssistantAgent.
+- Implemented a two-phase AgentRouter (keyword + LLM fallback via Together API / Qwen2.5-7B) and full ReAct loop streaming every thought, tool call, and token via Server-Sent Events.
+- Designed an Elo-based mastery tracking system (Bloom's taxonomy levels), a 13-tool registry (HF, DB, logic), and 64-thread concurrency supporting 200 simultaneous users.
+- Built with FastAPI, React + TypeScript (Vite), Zustand, LangGraph (v1), SQLite + SQLAlchemy async, MongoDB (evals), and Langfuse for observability. 190 tests passing.
+- GitHub: https://github.com/atharvakale07082000/ai-based-tutor
+
 Document Intelligence Chatbot (RAG)
 Oct 2025 – Dec 2025
 - Engineered a production-grade RAG system enabling real-time chat over multi-format documents (PDF, DOCX, PPTX) using Google Gemini and vector embeddings.

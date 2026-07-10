@@ -1,74 +1,176 @@
 @import "tailwindcss";
 
+/* ── Design tokens: "Keynote" (Apple system) ───────────────────── */
 @theme inline {
-    --color-background: #000000;
-    --color-foreground: #ffffff;
+    --color-canvas: #fbfbfd;
+    --color-surface: #f5f5f7;
+    --color-ink: #1d1d1f;
+    --color-muted: #6e6e73;
+    --color-hairline: #d2d2d7;
+    --color-accent: #0071e3;
+    --color-accentbright: #2997ff;
+
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", var(--font-inter), "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", "Menlo", "Roboto Mono", monospace;
 }
 
-body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
     overflow-x: hidden;
 }
 
-/* Stripe-inspired Ethereal Mesh Background */
-.mesh-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-    background-color: #050505;
-    background-image:
-        radial-gradient(at 0% 0%, hsla(253, 36%, 15%, 1) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, hsla(225, 49%, 20%, 0.8) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, hsla(339, 49%, 15%, 1) 0px, transparent 50%);
-    animation: flow 20s ease-in-out infinite alternate;
+body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    letter-spacing: -0.01em;
 }
 
-@keyframes flow {
-    0% {
-        background-position: 0% 0%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 100%;
-    }
+/* Selection uses the single accent, Apple-style */
+::selection {
+    background: rgba(0, 113, 227, 0.18);
+    color: var(--color-ink);
 }
 
-/* Brutalist + Stripe Card Mix */
-.brutalist-card {
-    background-color: #ffffff;
-    color: #000000;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 1.5rem;
-    /* Stripe rounded corners */
-    box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -1px rgba(0, 0, 0, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 1);
-    /* delicate lighting */
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+/* ── Materials ─────────────────────────────────────────────────── */
+
+/* Frosted chrome — nav, floating capsules ("Liquid Glass") */
+.glass {
+    background: rgba(251, 251, 253, 0.72);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.brutalist-card:hover {
+.glass-dark {
+    background: rgba(22, 22, 24, 0.6);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Light product tile */
+.card {
+    background: #ffffff;
+    border: 1px solid var(--color-hairline);
+    border-radius: 22px;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover {
     transform: translateY(-4px);
-    box-shadow:
-        0 20px 25px -5px rgba(0, 0, 0, 0.05),
-        0 10px 10px -5px rgba(0, 0, 0, 0.02),
-        inset 0 1px 0 rgba(255, 255, 255, 1);
-    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.16);
+    box-shadow: 0 24px 48px -18px rgba(0, 0, 0, 0.22);
 }
 
-/* Scrollbar */
+/* The one bold moment: full-bleed black product tile */
+.tile-dark {
+    background: #000000;
+    color: var(--color-surface);
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ── Type helpers ──────────────────────────────────────────────── */
+.display {
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+}
+
+.eyebrow {
+    font-weight: 600;
+    letter-spacing: 0.004em;
+    color: var(--color-accent);
+}
+
+.mono {
+    font-family: var(--font-mono);
+    font-feature-settings: "tnum" 1;
+}
+
+/* Silver → graphite gradient used once, on the name */
+.text-graphite {
+    background: linear-gradient(180deg, #2b2b2f 0%, #6e6e73 120%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ── Controls ──────────────────────────────────────────────────── */
+.btn-primary {
+    background: var(--color-accent);
+    color: #fff;
+    border-radius: 980px;
+    font-weight: 500;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: #0077ed;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-glass {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #fff;
+    border-radius: 980px;
+    font-weight: 500;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-glass:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.link-chevron {
+    color: var(--color-accent);
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+}
+
+.link-chevron:hover {
+    opacity: 0.7;
+}
+
+/* ── Tech-specs table (signature motif) ────────────────────────── */
+.spec-row {
+    border-top: 1px solid var(--color-hairline);
+}
+
+.spec-row-dark {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* ── Focus & motion floor ──────────────────────────────────────── */
+:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Scrollbar — quiet, Apple-neutral */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -76,10 +178,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #333333;
-    border-radius: 4px;
+    background: #c7c7cc;
+    border-radius: 6px;
+    border: 3px solid var(--color-canvas);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #666666;
+    background: #a1a1a6;
 }
