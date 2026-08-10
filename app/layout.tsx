@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Chatbot from "@/components/Chatbot";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
                 </main>
                 <Footer />
                 <Chatbot />
+                <SpeedInsights />
             </body>
         </html>
     );
