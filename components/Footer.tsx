@@ -1,46 +1,73 @@
 import Link from "next/link";
 import { Github, Linkedin, Mail, ArrowUpRight } from "lucide-react";
+import { profile } from "@/lib/content";
+
+const socials = [
+    { label: "GitHub", href: profile.github, Icon: Github, external: true },
+    { label: "LinkedIn", href: profile.linkedin, Icon: Linkedin, external: true },
+    { label: "Email", href: `mailto:${profile.email}`, Icon: Mail, external: false },
+];
 
 export default function Footer() {
     return (
-        <footer className="bg-surface border-t border-hairline">
-            <div className="max-w-6xl mx-auto px-5 md:px-8 py-16">
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-10">
-                    <div>
-                        <p className="eyebrow text-[14px] mb-3">Let&apos;s build something</p>
+        <footer className="rule-t" style={{ background: "var(--surface)" }}>
+            <div className="max-w-[1180px] mx-auto px-5 md:px-8 py-16 md:py-20">
+                <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10">
+                    <div className="min-w-0">
+                        <p className="telemetry text-signal mb-4">Open to work</p>
                         <a
-                            href="mailto:atharva.skale07@gmail.com"
-                            className="display text-[30px] md:text-[44px] text-ink hover:text-accent transition-colors inline-flex items-center gap-2 group"
+                            href={`mailto:${profile.email}`}
+                            className="display t-email text-ink inline-flex items-start gap-2 group"
                         >
-                            atharva.skale07@gmail.com
+                            <span className="link">{profile.email}</span>
                             <ArrowUpRight
-                                className="mt-1 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                                size={28}
+                                size={24}
+                                className="mt-1.5 shrink-0 text-graphite transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                             />
                         </a>
+                        <p className="text-[15px] text-graphite mt-4 max-w-md">
+                            Backend and AI roles, contract or full-time. Fastest reply by email.
+                        </p>
                     </div>
 
-                    <div className="flex gap-3">
-                        <a href="https://github.com/atharvakale07082000" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="w-11 h-11 rounded-full bg-white border border-hairline flex items-center justify-center text-muted hover:text-ink hover:border-ink/20 transition-colors">
-                            <Github size={19} />
-                        </a>
-                        <a href="https://www.linkedin.com/in/atharva-kale-7b0b53177/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-11 h-11 rounded-full bg-white border border-hairline flex items-center justify-center text-muted hover:text-ink hover:border-ink/20 transition-colors">
-                            <Linkedin size={19} />
-                        </a>
-                        <a href="mailto:atharva.skale07@gmail.com" aria-label="Email" className="w-11 h-11 rounded-full bg-white border border-hairline flex items-center justify-center text-muted hover:text-ink hover:border-ink/20 transition-colors">
-                            <Mail size={19} />
-                        </a>
+                    <div className="flex gap-2 shrink-0">
+                        {socials.map(({ label, href, Icon, external }) => (
+                            <a
+                                key={label}
+                                href={href}
+                                aria-label={label}
+                                {...(external
+                                    ? { target: "_blank", rel: "noopener noreferrer" }
+                                    : {})}
+                                className="panel panel-hover w-12 h-12 inline-flex items-center justify-center text-graphite hover:text-ink"
+                            >
+                                <Icon size={18} />
+                            </a>
+                        ))}
                     </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-14 pt-8 border-t border-hairline">
-                    <div className="flex gap-7 mono text-[12px] text-muted">
-                        <Link href="/about" className="hover:text-ink transition-colors">About</Link>
-                        <Link href="/experience" className="hover:text-ink transition-colors">Experience</Link>
-                        <Link href="/projects" className="hover:text-ink transition-colors">Projects</Link>
+                <div className="rule-t mt-14 pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex flex-wrap gap-x-6 gap-y-2">
+                        <Link href="/projects" className="telemetry text-graphite hover:text-ink transition-colors inline-flex items-center min-h-[28px]">
+                            Work
+                        </Link>
+                        <Link href="/experience" className="telemetry text-graphite hover:text-ink transition-colors inline-flex items-center min-h-[28px]">
+                            Experience
+                        </Link>
+                        <Link href="/about" className="telemetry text-graphite hover:text-ink transition-colors inline-flex items-center min-h-[28px]">
+                            About
+                        </Link>
+                        <a
+                            href={profile.resume}
+                            download
+                            className="telemetry text-graphite hover:text-ink transition-colors inline-flex items-center min-h-[28px]"
+                        >
+                            Résumé
+                        </a>
                     </div>
-                    <p className="mono text-[12px] text-muted">
-                        © {new Date().getFullYear()} Atharva Kale
+                    <p className="telemetry text-graphite">
+                        {profile.location} · {new Date().getFullYear()}
                     </p>
                 </div>
             </div>

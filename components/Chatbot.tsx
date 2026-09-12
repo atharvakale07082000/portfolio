@@ -1,43 +1,48 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot, Sparkles } from "lucide-react";
-import { clsx } from "clsx";
+import { MessageSquare, X, ArrowUp } from "lucide-react";
 
-interface Message {
-    role: "user" | "assistant";
-    content: string;
-}
+type Message = { role: "user" | "assistant"; content: string };
 
 const SUGGESTIONS = [
-    "What is Atharva's tech stack?",
-    "Tell me about the AI Tutor project.",
-    "What experience does Atharva have?",
-    "Is Atharva available for new roles?",
+    "How does the Atelier orchestrator route a turn?",
+    "What has Atharva shipped with FastAPI?",
+    "Where has he worked, and for how long?",
+    "What is he strongest at?",
 ];
 
-function MarkdownText({ text }: { text: string }) {
-    const segments = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
+/** Inline **bold** and `code` only — the API answers in plain prose. */
+function Rich({ text }: { text: string }) {
+    const parts = text.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
     return (
         <>
-            {segments.map((seg, i) => {
-                if (seg.startsWith("**") && seg.endsWith("**")) {
-                    return <strong key={i} className="font-bold">{seg.slice(2, -2)}</strong>;
-                }
-                if (seg.startsWith("`") && seg.endsWith("`")) {
+            {parts.map((part, i) => {
+                if (part.startsWith("**") && part.endsWith("**")) {
                     return (
-                        <code key={i} className="bg-surface text-accent px-1 rounded text-[0.75em] font-mono">
-                            {seg.slice(1, -1)}
+                        <strong key={i} className="font-semibold text-ink">
+                            {part.slice(2, -2)}
+                        </strong>
+                    );
+                }
+                if (part.startsWith("`") && part.endsWith("`")) {
+                    return (
+                        <code
+                            key={i}
+                            className="numeral text-[0.85em] text-signal px-1 py-0.5 rounded-[2px]"
+                            style={{ background: "var(--sunk)" }}
+                        >
+                            {part.slice(1, -1)}
                         </code>
                     );
                 }
                 return (
                     <span key={i}>
-                        {seg.split("\n").map((line, j, arr) => (
+                        {part.split("\n").map((line, j, all) => (
                             <span key={j}>
                                 {line}
-                                {j < arr.length - 1 && <br />}
+                                {j < all.length - 1 && <br />}
                             </span>
                         ))}
                     </span>
@@ -47,132 +52,134 @@ function MarkdownText({ text }: { text: string }) {
     );
 }
 
-function TypingDots() {
+function Thinking() {
     return (
-        <div className="flex items-center gap-1 px-1 py-1">
+        <div className="flex items-center gap-1.5 py-0.5">
             {[0, 1, 2].map((i) => (
                 <motion.span
                     key={i}
-                    className="w-1.5 h-1.5 rounded-full bg-gray-400"
-                    animate={{ opacity: [0.3, 1, 0.3], y: [0, -3, 0] }}
-                    transition={{ duration: 0.9, repeat: Infinity, delay: i * 0.2, ease: "easeInOut" }}
+                    className="w-1 h-1 rounded-full bg-signal"
+                    animate={{ opacity: [0.25, 1, 0.25] }}
+                    transition={{ duration: 1, repeat: Infinity, delay: i * 0.18, ease: "easeInOut" }}
                 />
             ))}
         </div>
     );
 }
 
-function ChatWindow({ onClose }: { onClose: () => void }) {
+function Panel({ onClose }: { onClose: () => void }) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
-    const [isStreaming, setIsStreaming] = useState(false);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const [streaming, setStreaming] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const endRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const abortRef = useRef<AbortController | null>(null);
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages, isStreaming]);
+        inputRef.current?.focus();
+        return () => abortRef.current?.abort();
+    }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const text = input.trim();
-        if (!text || isStreaming) return;
+    useEffect(() => {
+        endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    }, [messages, streaming]);
 
-        const userMsg: Message = { role: "user", content: text };
-        const nextMessages = [...messages, userMsg];
-        setMessages(nextMessages);
-        setInput("");
-        setIsStreaming(true);
+    const send = useCallback(
+        async (text: string) => {
+            const trimmed = text.trim();
+            if (!trimmed || streaming) return;
 
-        abortRef.current = new AbortController();
+            setError(null);
+            const outgoing: Message[] = [...messages, { role: "user", content: trimmed }];
+            setMessages(outgoing);
+            setInput("");
+            setStreaming(true);
 
-        try {
-            const res = await fetch("/api/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ messages: nextMessages }),
-                signal: abortRef.current.signal,
-            });
+            const controller = new AbortController();
+            abortRef.current = controller;
 
-            if (!res.ok || !res.body) throw new Error("Request failed");
+            try {
+                const res = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ messages: outgoing }),
+                    signal: controller.signal,
+                });
+                if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
 
-            const reader = res.body.getReader();
-            const decoder = new TextDecoder();
-            let accumulated = "";
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder();
+                let text = "";
+                setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
-            setMessages(prev => [...prev, { role: "assistant", content: "" }]);
-
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                accumulated += decoder.decode(value, { stream: true });
-                setMessages(prev => [
-                    ...prev.slice(0, -1),
-                    { role: "assistant", content: accumulated },
-                ]);
+                for (;;) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    text += decoder.decode(value, { stream: true });
+                    setMessages((prev) => [
+                        ...prev.slice(0, -1),
+                        { role: "assistant", content: text },
+                    ]);
+                }
+            } catch (err) {
+                if (err instanceof Error && err.name === "AbortError") return;
+                setError("The answer didn't come back. Send it again, or email Atharva directly.");
+            } finally {
+                setStreaming(false);
             }
-        } catch (err: unknown) {
-            if (err instanceof Error && err.name === "AbortError") return;
-            setMessages(prev => [
-                ...prev,
-                { role: "assistant", content: "Sorry, something went wrong. Please try again." },
-            ]);
-        } finally {
-            setIsStreaming(false);
-        }
-    };
+        },
+        [messages, streaming]
+    );
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.28, ease: [0.23, 1, 0.32, 1] }}
-            className="fixed bottom-24 right-6 z-50 w-[90vw] md:w-[420px] h-[560px] card flex flex-col overflow-hidden shadow-[0_24px_60px_-15px_rgba(0,0,0,0.3)]"
+            role="dialog"
+            aria-label="Ask about Atharva's work"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            className="panel fixed z-50 flex flex-col overflow-hidden
+                       inset-x-3 bottom-3 h-[min(78vh,600px)]
+                       sm:inset-x-auto sm:right-6 sm:bottom-24 sm:w-[420px] sm:h-[580px]"
+            style={{ boxShadow: "var(--shadow-float)" }}
         >
             {/* Header */}
-            <div className="px-5 py-4 bg-white border-b border-hairline flex items-center justify-between flex-shrink-0">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-full bg-accent text-white">
-                        <Bot size={18} />
-                    </div>
-                    <div>
-                        <h3 className="font-semibold text-ink tracking-tight text-[15px] leading-tight">
-                            Ask Atharva&apos;s AI
-                        </h3>
-                        <div className="flex items-center gap-1.5 mt-0.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
-                            <p className="mono text-[10px] text-muted uppercase tracking-wider">
-                                Powered by Gemini
-                            </p>
-                        </div>
-                    </div>
+            <div className="rule-b px-4 py-3 flex items-center justify-between shrink-0">
+                <div className="min-w-0">
+                    <h2 className="display text-[15px] tracking-[-0.02em] text-ink">
+                        Ask about the work
+                    </h2>
+                    <p className="telemetry text-graphite mt-0.5">
+                        Answers from his résumé · Gemini
+                    </p>
                 </div>
                 <button
+                    type="button"
                     onClick={onClose}
-                    aria-label="Close chat"
-                    className="p-2 rounded-full hover:bg-surface text-muted hover:text-ink transition-colors"
+                    aria-label="Close"
+                    className="w-11 h-11 -mr-2.5 inline-flex items-center justify-center text-graphite hover:text-ink transition-colors shrink-0"
                 >
                     <X size={18} />
                 </button>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 bg-surface overflow-y-auto p-4 space-y-4">
+            {/* Transcript */}
+            <div
+                className="flex-1 overflow-y-auto px-4 py-4 space-y-4"
+                style={{ background: "var(--paper)" }}
+            >
                 {messages.length === 0 && (
-                    <div className="mt-6">
-                        <div className="flex items-center gap-2 mb-4">
-                            <Sparkles size={14} className="text-muted" />
-                            <p className="mono text-[11px] text-muted uppercase tracking-wider">
-                                Suggested questions
-                            </p>
-                        </div>
-                        <ul className="flex flex-col gap-2">
+                    <div>
+                        <p className="telemetry text-graphite mb-3">Try one of these</p>
+                        <ul className="space-y-2">
                             {SUGGESTIONS.map((s) => (
                                 <li key={s}>
                                     <button
-                                        onClick={() => setInput(s)}
-                                        className="w-full text-left px-4 py-3 rounded-xl bg-white border border-hairline hover:border-accent font-medium text-muted hover:text-ink text-sm transition-all"
+                                        type="button"
+                                        onClick={() => send(s)}
+                                        className="panel panel-hover w-full text-left px-3.5 py-3 text-[14px] text-graphite hover:text-ink leading-snug"
                                     >
                                         {s}
                                     </button>
@@ -182,70 +189,78 @@ function ChatWindow({ onClose }: { onClose: () => void }) {
                     </div>
                 )}
 
-                {messages.map((m, idx) => (
-                    <div
-                        key={idx}
-                        className={clsx(
-                            "flex gap-2.5 max-w-[88%]",
-                            m.role === "user" ? "ml-auto flex-row-reverse" : "mr-auto"
-                        )}
-                    >
-                        {m.role === "assistant" && (
-                            <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 bg-accent text-white mt-0.5">
-                                <Bot size={13} />
-                            </div>
-                        )}
-                        <div
-                            className={clsx(
-                                "px-4 py-3 rounded-2xl text-sm leading-relaxed font-normal shadow-sm",
-                                m.role === "user"
-                                    ? "bg-accent text-white rounded-br-sm"
-                                    : "bg-white text-ink rounded-bl-sm border border-hairline"
-                            )}
-                        >
-                            {m.role === "assistant" ? (
-                                <MarkdownText text={m.content} />
-                            ) : (
-                                m.content
-                            )}
+                {messages.map((m, i) =>
+                    m.role === "user" ? (
+                        <div key={i} className="flex justify-end">
+                            <p
+                                className="max-w-[85%] px-3.5 py-2.5 text-[14.5px] leading-relaxed rounded-[2px]"
+                                style={{ background: "var(--signal)", color: "var(--signal-ink)" }}
+                            >
+                                {m.content}
+                            </p>
                         </div>
-                    </div>
-                ))}
+                    ) : (
+                        <div key={i} className="max-w-[92%]">
+                            <p className="telemetry text-signal mb-1.5">reply</p>
+                            <p className="text-[14.5px] text-graphite leading-[1.65]">
+                                <Rich text={m.content} />
+                                {streaming && i === messages.length - 1 && (
+                                    <span className="caret" aria-hidden="true" />
+                                )}
+                            </p>
+                        </div>
+                    )
+                )}
 
-                {isStreaming && messages[messages.length - 1]?.role !== "assistant" && (
-                    <div className="flex gap-2.5 mr-auto max-w-[88%]">
-                        <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 bg-accent text-white mt-0.5">
-                            <Bot size={13} />
-                        </div>
-                        <div className="px-4 py-3 rounded-2xl bg-white border border-hairline shadow-sm rounded-bl-sm">
-                            <TypingDots />
-                        </div>
+                {streaming && messages[messages.length - 1]?.role === "user" && (
+                    <div>
+                        <p className="telemetry text-signal mb-1.5">reply</p>
+                        <Thinking />
                     </div>
                 )}
 
-                <div ref={messagesEndRef} />
+                {error && (
+                    <p role="alert" className="text-[13.5px] text-ink rule-t pt-3">
+                        {error}
+                    </p>
+                )}
+
+                <div ref={endRef} />
             </div>
 
-            {/* Input */}
+            {/* Composer */}
             <form
-                onSubmit={handleSubmit}
-                className="p-4 bg-white border-t border-hairline flex-shrink-0"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    send(input);
+                }}
+                className="rule-t p-3 shrink-0"
             >
                 <div className="relative flex items-center">
+                    <label htmlFor="chat-input" className="sr-only">
+                        Your question
+                    </label>
                     <input
+                        id="chat-input"
+                        ref={inputRef}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        placeholder="Ask about skills, projects, experience..."
-                        className="w-full bg-surface border border-hairline focus:border-accent rounded-full py-3.5 pl-5 pr-14 text-sm text-ink focus:outline-none transition-all placeholder:text-muted font-normal"
-                        disabled={isStreaming}
+                        placeholder="Ask about a project, a stack, a role…"
+                        disabled={streaming}
+                        className="w-full min-h-[44px] pl-3.5 pr-12 text-[14.5px] text-ink rounded-[2px] border transition-colors focus:outline-none disabled:opacity-60"
+                        style={{
+                            background: "var(--paper)",
+                            borderColor: "var(--rule-strong)",
+                        }}
                     />
                     <button
                         type="submit"
-                        aria-label="Send message"
-                        disabled={isStreaming || !input.trim()}
-                        className="absolute right-1.5 p-2 rounded-full bg-accent text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#0077ed] transition-colors"
+                        aria-label="Send"
+                        disabled={streaming || !input.trim()}
+                        className="absolute right-1 w-9 h-9 inline-flex items-center justify-center rounded-[2px] disabled:opacity-35 disabled:cursor-not-allowed transition-opacity"
+                        style={{ background: "var(--signal)", color: "var(--signal-ink)" }}
                     >
-                        <Send size={15} />
+                        <ArrowUp size={16} />
                     </button>
                 </div>
             </form>
@@ -254,28 +269,34 @@ function ChatWindow({ onClose }: { onClose: () => void }) {
 }
 
 export default function Chatbot() {
-    const [isOpen, setIsOpen] = useState(false);
+    const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        if (!open) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setOpen(false);
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [open]);
 
     return (
         <>
-            <motion.button
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsOpen(!isOpen)}
-                aria-label={isOpen ? "Close chat" : "Ask AI"}
-                className="glass fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-ink font-medium shadow-lg hover:bg-white/90 transition-colors"
+            <button
+                type="button"
+                onClick={() => setOpen((v) => !v)}
+                aria-expanded={open}
+                aria-label={open ? "Close the question panel" : "Ask about Atharva's work"}
+                className="panel fixed bottom-5 right-5 z-40 min-h-[44px] inline-flex items-center gap-2 px-4 text-ink hover:border-rule-strong transition-colors"
+                style={{ boxShadow: "var(--shadow-lift)" }}
             >
-                {isOpen ? <X size={20} /> : <MessageCircle size={20} />}
-                <span className="hidden sm:inline text-[13px] tracking-tight">
-                    {isOpen ? "Close" : "Ask AI"}
+                {open ? <X size={17} /> : <MessageSquare size={17} />}
+                <span className="text-[14px] font-medium tracking-[-0.01em]">
+                    {open ? "Close" : "Ask"}
                 </span>
-            </motion.button>
+            </button>
 
-            <AnimatePresence>
-                {isOpen && <ChatWindow onClose={() => setIsOpen(false)} />}
-            </AnimatePresence>
+            <AnimatePresence>{open && <Panel onClose={() => setOpen(false)} />}</AnimatePresence>
         </>
     );
 }

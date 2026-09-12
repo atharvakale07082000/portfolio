@@ -2,107 +2,116 @@
 
 import { motion } from "framer-motion";
 
-interface ExperienceItem {
-    id: number;
+type Role = {
     role: string;
     company: string;
     period: string;
     location: string;
-    description: string[];
-    technologies: string[];
-}
+    /** The single most useful number from the role. */
+    headline: { label: string; value: string };
+    work: string[];
+    stack: string[];
+};
 
-const experiences: ExperienceItem[] = [
+const roles: Role[] = [
     {
-        id: 1,
         role: "Senior Backend & AI Engineer",
         company: "Anervea Data Labs",
         period: "Aug 2025 — Present",
-        location: "Pune, Maharashtra",
-        description: [
-            "Leading backend and AI architecture for AlfaKinetic, a GenAI-driven competitive-intelligence platform.",
-            "Architected RAG pipelines with LangChain, Hugging Face, and vector DBs (Pinecone, Qdrant), cutting retrieval latency by 60%.",
-            "Designed scalable Python microservices with FastAPI, Kafka, and Celery, enabling 10× higher throughput.",
-            "Partnered with leadership to define the GenAI roadmap and mentored engineers on LLM system design.",
+        location: "Pune",
+        headline: { label: "Retrieval latency", value: "−60%" },
+        work: [
+            "Lead the backend and AI architecture for AlfaKinetic, a GenAI competitive-intelligence platform serving real-time business insight.",
+            "Architected the retrieval layer on LangChain, Hugging Face and vector stores (Pinecone, Qdrant), cutting retrieval latency by 60%.",
+            "Designed the Python service tier on FastAPI, Kafka and Celery, taking ingestion and semantic-search throughput to 10× where it started.",
+            "Set the GenAI roadmap with leadership and mentor engineers on LLM system design and CI/CD.",
         ],
-        technologies: ["Python", "FastAPI", "LangChain", "Pinecone", "Kafka", "Celery"],
+        stack: ["Python", "FastAPI", "LangChain", "Kafka", "Celery", "Pinecone", "Qdrant"],
     },
     {
-        id: 2,
         role: "Backend Engineer",
         company: "Anervea Data Labs",
         period: "Sep 2024 — Aug 2025",
-        location: "Pune, Maharashtra",
-        description: [
-            "Developed high-performance REST APIs, reducing latency from 7s to under 100ms.",
-            "Built automated data-extraction systems with Playwright, Celery, and Selenium, boosting throughput 3×.",
-            "Implemented resilient ETL pipelines and integrated MongoDB + Redis for real-time analytics.",
+        location: "Pune",
+        headline: { label: "API response", value: "7s → <100ms" },
+        work: [
+            "Rebuilt the REST layer and its backend workflows, taking API response time from seven seconds to under a hundred milliseconds.",
+            "Built automated extraction systems on Playwright, Selenium and Celery that tripled research throughput.",
+            "Implemented resilient ETL pipelines on MongoDB and Redis for low-latency real-time analytics.",
         ],
-        technologies: ["Python", "Playwright", "Selenium", "MongoDB", "Redis"],
+        stack: ["Python", "Playwright", "Selenium", "Celery", "MongoDB", "Redis"],
     },
     {
-        id: 3,
-        role: "Python Full-Stack Developer Intern",
+        role: "Python Full-Stack Developer, Intern",
         company: "Netra Labs",
         period: "Aug 2024 — Sep 2024",
-        location: "Pune, Maharashtra",
-        description: [
-            "Cut front-end load times by 25% using Next.js and React Query.",
-            "Improved usability and engagement by 15% across data-analytics applications.",
+        location: "Pune",
+        headline: { label: "Front-end load", value: "−25%" },
+        work: [
+            "Cut front-end load times by 25% across data-analytics applications with Next.js and React Query.",
+            "Those gains carried through to a 15% lift in measured usability and engagement.",
         ],
-        technologies: ["Next.js", "React Query", "JavaScript", "Python"],
+        stack: ["Next.js", "React Query", "JavaScript", "Python"],
     },
 ];
 
 export default function ExperienceTimeline() {
     return (
-        <div className="relative">
-            {/* Hairline spine */}
-            <div className="absolute left-[5px] top-3 bottom-3 w-px bg-hairline hidden sm:block" />
+        <div>
+            {roles.map((role, i) => (
+                <motion.article
+                    key={`${role.company}-${role.period}`}
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+                    transition={{ duration: 0.55, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                    className="rule-t grid grid-cols-1 md:grid-cols-12 gap-x-10 gap-y-5 py-9 md:py-12"
+                >
+                    {/* When + the one number */}
+                    <div className="md:col-span-3">
+                        <p className="telemetry text-graphite">{role.period}</p>
+                        <p className="telemetry text-graphite/80 mt-1.5">{role.location}</p>
 
-            <div className="space-y-14">
-                {experiences.map((exp, index) => (
-                    <motion.div
-                        key={exp.id}
-                        initial={{ opacity: 0, y: 16 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-15% 0px -15% 0px" }}
-                        transition={{ duration: 0.6, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative sm:pl-10 group"
-                    >
-                        {/* Dot */}
-                        <div className="absolute left-0 top-2 w-[11px] h-[11px] rounded-full bg-canvas border-2 border-hairline group-hover:border-accent group-hover:bg-accent transition-colors duration-500 hidden sm:block" />
-
-                        <div className="mono text-[12px] uppercase tracking-wider text-muted mb-2">
-                            {exp.period} · {exp.location}
+                        <div className="mt-6">
+                            <p className="telemetry text-graphite">{role.headline.label}</p>
+                            <p className="numeral text-[22px] md:text-[26px] font-medium text-signal mt-1 leading-none">
+                                {role.headline.value}
+                            </p>
                         </div>
-                        <h3 className="text-[24px] md:text-[26px] font-semibold tracking-tight text-ink leading-tight">
-                            {exp.role}
-                        </h3>
-                        <div className="text-[16px] text-accent font-medium mt-0.5">{exp.company}</div>
+                    </div>
 
-                        <ul className="space-y-2.5 mt-5 text-[16px] text-muted leading-relaxed font-normal">
-                            {exp.description.map((item, i) => (
-                                <li key={i} className="pl-4 relative">
-                                    <span className="absolute left-0 top-[10px] w-1 h-1 rounded-full bg-hairline" />
+                    {/* What */}
+                    <div className="md:col-span-9">
+                        <h3 className="display text-[22px] md:text-[26px] tracking-[-0.03em] text-ink leading-tight">
+                            {role.role}
+                        </h3>
+                        <p className="text-[16px] text-graphite mt-1">{role.company}</p>
+
+                        <ul className="mt-6 space-y-3">
+                            {role.work.map((item) => (
+                                <li
+                                    key={item}
+                                    className="relative pl-5 text-[16px] text-graphite leading-[1.65]"
+                                >
+                                    <span
+                                        aria-hidden="true"
+                                        className="absolute left-0 top-[11px] w-2 h-px bg-rule-strong"
+                                    />
                                     {item}
                                 </li>
                             ))}
                         </ul>
 
-                        <div className="flex flex-wrap gap-2 mt-5">
-                            {exp.technologies.map((tech) => (
-                                <span
-                                    key={tech}
-                                    className="mono text-[11px] tracking-tight text-muted bg-surface rounded-full px-3 py-1"
-                                >
+                        <div className="flex flex-wrap gap-1.5 mt-6">
+                            {role.stack.map((tech) => (
+                                <span key={tech} className="tag">
                                     {tech}
                                 </span>
                             ))}
                         </div>
-                    </motion.div>
-                ))}
-            </div>
+                    </div>
+                </motion.article>
+            ))}
         </div>
     );
 }

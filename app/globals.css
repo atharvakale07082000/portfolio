@@ -1,188 +1,452 @@
 @import "tailwindcss";
 
-/* ── Design tokens: "Keynote" (Apple system) ───────────────────── */
-@theme inline {
-    --color-canvas: #fbfbfd;
-    --color-surface: #f5f5f7;
-    --color-ink: #1d1d1f;
-    --color-muted: #6e6e73;
-    --color-hairline: #d2d2d7;
-    --color-accent: #0071e3;
-    --color-accentbright: #2997ff;
+/* ═══════════════════════════════════════════════════════════════════
+   "TRACE" — design system
+   The premise: this engineer builds systems that think out loud.
+   So the site is a trace, not a product page. Blueprint stock paper,
+   hairline structure, one signal colour, telemetry set in wide mono.
+   ═══════════════════════════════════════════════════════════════════ */
 
-    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", var(--font-inter), "Segoe UI", Roboto, sans-serif;
-    --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", "Menlo", "Roboto Mono", monospace;
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ── Palette ──────────────────────────────────────────────────────── */
+
+:root {
+    color-scheme: light;
+
+    --paper: #edeff2;
+    /* blueprint stock */
+    --surface: #f8f9fb;
+    /* raised panel */
+    --sunk: #e3e7ec;
+    /* recessed / tag ground */
+    --ink: #0f161c;
+    /* deep blue-black */
+    --graphite: #576673;
+    /* secondary text — 5.3:1 on paper */
+    --rule: #ccd4dc;
+    /* hairline */
+    --rule-strong: #7c8a97;
+    /* 3.1:1 on paper — separators and control borders stay perceivable */
+    --signal: #4a27d9;
+    /* electric violet — interactive + live */
+    --signal-ink: #ffffff;
+    /* text on signal */
+    --verified: #0e6f63;
+    /* teal — measured / passing */
+
+    --shadow-panel: 0 1px 2px rgba(15, 22, 28, 0.04);
+    --shadow-lift: 0 18px 40px -22px rgba(15, 22, 28, 0.28);
+    --shadow-float: 0 24px 56px -18px rgba(15, 22, 28, 0.34);
 }
+
+[data-theme="dark"] {
+    color-scheme: dark;
+
+    --paper: #0b1014;
+    --surface: #141b21;
+    --sunk: #1c242c;
+    --ink: #e9eef2;
+    --graphite: #8d9ba8;
+    /* 6.4:1 on paper */
+    --rule: #253039;
+    --rule-strong: #576976;
+    /* 3.1:1 on paper */
+    --signal: #9b80ff;
+    --signal-ink: #120a2e;
+    --verified: #2dd4bf;
+
+    --shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-lift: 0 18px 40px -22px rgba(0, 0, 0, 0.7);
+    --shadow-float: 0 24px 56px -18px rgba(0, 0, 0, 0.8);
+}
+
+/* ── Theme bridge ─────────────────────────────────────────────────── */
+
+@theme inline {
+    --color-paper: var(--paper);
+    --color-surface: var(--surface);
+    --color-sunk: var(--sunk);
+    --color-ink: var(--ink);
+    --color-graphite: var(--graphite);
+    --color-rule: var(--rule);
+    --color-rule-strong: var(--rule-strong);
+    --color-signal: var(--signal);
+    --color-signal-ink: var(--signal-ink);
+    --color-verified: var(--verified);
+
+    --font-display: var(--font-bricolage), "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-sans: var(--font-instrument), "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --font-mono: var(--font-martian), ui-monospace, "SF Mono", Menlo, monospace;
+
+    /* One scale. Every size on the site comes from here. */
+    --text-micro: 0.6875rem;
+    /* 11 — telemetry labels */
+    --text-caption: 0.8125rem;
+    /* 13 — captions, tags */
+    --text-small: 0.9375rem;
+    /* 15 — dense body */
+    --text-body: 1.0625rem;
+    /* 17 — body */
+    --text-lead: 1.1875rem;
+    /* 19 — lead-in */
+    --text-title: 1.375rem;
+    /* 22 — card titles */
+
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Base ─────────────────────────────────────────────────────────── */
 
 html {
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 }
 
 body {
-    background-color: var(--color-canvas);
-    color: var(--color-ink);
-    font-family: var(--font-sans);
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-instrument), "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.6;
     overflow-x: hidden;
+}
+
+::selection {
+    background: color-mix(in srgb, var(--signal) 22%, transparent);
+    color: var(--ink);
+}
+
+/* ── Type roles ───────────────────────────────────────────────────── */
+
+/* Display: Bricolage Grotesque, tight and set large. */
+.display {
+    font-family: var(--font-bricolage), "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.94;
+}
+
+.display-tight {
+    letter-spacing: -0.045em;
+}
+
+/* The fluid sizes. clamp() so there is no jump at any width. */
+.t-hero {
+    font-size: clamp(3rem, 11.5vw, 8.75rem);
+}
+
+.t-h1 {
+    font-size: clamp(2.25rem, 6.5vw, 4.25rem);
+}
+
+.t-h2 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.t-h3 {
+    font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+}
+
+.t-email {
+    /* Sized to keep one unbreakable address on one line, phone included. */
+    font-size: clamp(1.25rem, 5.1vw, 2.75rem);
+}
+
+.t-lead {
+    font-size: clamp(1.0625rem, 1.9vw, 1.375rem);
+    line-height: 1.5;
+    letter-spacing: -0.012em;
+}
+
+/* Telemetry: Martian Mono. Small, wide, tracked out. Labels only —
+   never a paragraph. */
+.telemetry {
+    font-family: var(--font-martian), ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-feature-settings: "tnum" 1;
+    line-height: 1.4;
+}
+
+.numeral {
+    font-family: var(--font-martian), ui-monospace, "SF Mono", Menlo, monospace;
+    font-feature-settings: "tnum" 1;
     letter-spacing: -0.01em;
 }
 
-/* Selection uses the single accent, Apple-style */
-::selection {
-    background: rgba(0, 113, 227, 0.18);
-    color: var(--color-ink);
+/* ── Materials ────────────────────────────────────────────────────── */
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    box-shadow: var(--shadow-panel);
 }
 
-/* ── Materials ─────────────────────────────────────────────────── */
-
-/* Frosted chrome — nav, floating capsules ("Liquid Glass") */
-.glass {
-    background: rgba(251, 251, 253, 0.72);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    backdrop-filter: saturate(180%) blur(20px);
-    border: 1px solid rgba(0, 0, 0, 0.06);
+.panel-hover {
+    transition: border-color 0.35s var(--ease-out-expo),
+        box-shadow 0.35s var(--ease-out-expo),
+        transform 0.35s var(--ease-out-expo);
 }
 
-.glass-dark {
-    background: rgba(22, 22, 24, 0.6);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    backdrop-filter: saturate(180%) blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+.panel-hover:hover {
+    border-color: var(--rule-strong);
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
 }
 
-/* Light product tile */
-.card {
-    background: #ffffff;
-    border: 1px solid var(--color-hairline);
-    border-radius: 22px;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.chrome {
+    background: color-mix(in srgb, var(--paper) 90%, transparent);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
 }
 
-.card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(0, 0, 0, 0.16);
-    box-shadow: 0 24px 48px -18px rgba(0, 0, 0, 0.22);
+/* Hairline — the primary structural device. */
+.rule-t {
+    border-top: 1px solid var(--rule);
 }
 
-/* The one bold moment: full-bleed black product tile */
-.tile-dark {
-    background: #000000;
-    color: var(--color-surface);
-    border-radius: 28px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+.rule-b {
+    border-bottom: 1px solid var(--rule);
 }
 
-/* ── Type helpers ──────────────────────────────────────────────── */
-.display {
-    font-weight: 600;
-    letter-spacing: -0.035em;
-    line-height: 0.95;
+/* ── Signature: the trace rail ────────────────────────────────────── */
+
+/* The rail lives in the gutter, so it only appears once there is a real
+   gutter to live in. Below 1400px the content column reaches too far left
+   and the rail would sit on top of the text. Past that it tracks the
+   column rather than drifting to the window edge. */
+.rail-wrap {
+    display: none;
 }
 
-.eyebrow {
-    font-weight: 600;
-    letter-spacing: 0.004em;
-    color: var(--color-accent);
+@media (min-width: 1400px) {
+    .rail-wrap {
+        display: block;
+        left: max(1.5rem, calc(50% - 710px));
+    }
 }
 
-.mono {
-    font-family: var(--font-mono);
-    font-feature-settings: "tnum" 1;
+/* The page is one request. Each section is a span. The rail marks them. */
+.rail {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--rule);
 }
 
-/* Silver → graphite gradient used once, on the name */
-.text-graphite {
-    background: linear-gradient(180deg, #2b2b2f 0%, #6e6e73 120%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+.rail-node {
+    position: absolute;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    margin-left: -3.5px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--rule-strong);
+    transition: background 0.4s var(--ease-out-expo),
+        border-color 0.4s var(--ease-out-expo);
 }
 
-/* ── Controls ──────────────────────────────────────────────────── */
-.btn-primary {
-    background: var(--color-accent);
-    color: #fff;
-    border-radius: 980px;
+.rail-node[data-active="true"] {
+    background: var(--signal);
+    border-color: var(--signal);
+}
+
+/* The scroll-linked span fill. */
+.rail-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    background: var(--signal);
+    transform-origin: top;
+}
+
+/* ── Streaming caret ──────────────────────────────────────────────── */
+
+.caret {
+    display: inline-block;
+    width: 0.5ch;
+    height: 1em;
+    margin-left: 0.12em;
+    vertical-align: -0.12em;
+    background: var(--signal);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .caret {
+        animation: caret-blink 1.05s steps(2, start) infinite;
+    }
+}
+
+@keyframes caret-blink {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Live pulse — used once, on the one thing that is actually live. */
+.pulse-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--signal);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .pulse-ring {
+        animation: pulse-out 2s var(--ease-out-expo) infinite;
+    }
+}
+
+@keyframes pulse-out {
+    0% {
+        opacity: 0.55;
+        transform: scale(1);
+    }
+
+    70%,
+    100% {
+        opacity: 0;
+        transform: scale(2.6);
+    }
+}
+
+/* ── Controls ─────────────────────────────────────────────────────── */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-weight: 500;
-    transition: background 0.2s ease, transform 0.2s ease;
+    font-size: 0.9375rem;
+    letter-spacing: -0.01em;
+    min-height: 44px;
+    padding: 0 1.375rem;
+    border-radius: 2px;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+        transform 0.12s ease;
 }
 
-.btn-primary:hover {
-    background: #0077ed;
+.btn:active {
+    transform: translateY(1px);
 }
 
-.btn-primary:active {
-    transform: scale(0.98);
+.btn-signal {
+    background: var(--signal);
+    color: var(--signal-ink);
+    border: 1px solid var(--signal);
 }
 
-.btn-glass {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    color: #fff;
-    border-radius: 980px;
+.btn-signal:hover {
+    background: color-mix(in srgb, var(--signal) 86%, var(--ink));
+}
+
+.btn-quiet {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--rule-strong);
+}
+
+.btn-quiet:hover {
+    border-color: var(--ink);
+    background: var(--surface);
+}
+
+/* Inline link — underline that grows, no colour swap needed. */
+.link {
+    color: var(--ink);
+    text-decoration: none;
+    background-image: linear-gradient(var(--signal), var(--signal));
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.3s var(--ease-out-expo), color 0.2s ease;
+}
+
+.link:hover {
+    color: var(--signal);
+    background-size: 100% 1px;
+}
+
+ /* A .link that also needs to be a comfortable tap target. Padding grows
+   the hit area; the underline is nudged up to stay against the text. */
+.link-block {
+    display: inline-block;
+    padding-block: 0.25rem;
+    background-position: 0 calc(100% - 0.25rem);
+}
+
+.link-signal {
+    color: var(--signal);
     font-weight: 500;
-    transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.btn-glass:hover {
-    background: rgba(255, 255, 255, 0.18);
+/* Tag / chip — recessed, never a pill. */
+.tag {
+    font-family: var(--font-martian), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.01em;
+    color: var(--graphite);
+    background: var(--sunk);
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    transition: color 0.25s ease, background 0.25s ease;
 }
 
-.link-chevron {
-    color: var(--color-accent);
-    font-weight: 500;
-    transition: opacity 0.2s ease;
-}
+/* ── Focus & motion floor ─────────────────────────────────────────── */
 
-.link-chevron:hover {
-    opacity: 0.7;
-}
-
-/* ── Tech-specs table (signature motif) ────────────────────────── */
-.spec-row {
-    border-top: 1px solid var(--color-hairline);
-}
-
-.spec-row-dark {
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-/* ── Focus & motion floor ──────────────────────────────────────── */
 :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--signal);
     outline-offset: 3px;
-    border-radius: 4px;
+    border-radius: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto;
+    }
+
     *,
     *::before,
     *::after {
         animation-duration: 0.001ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
-        scroll-behavior: auto !important;
     }
 }
 
-/* Scrollbar — quiet, Apple-neutral */
+/* ── Scrollbar ────────────────────────────────────────────────────── */
+
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 11px;
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--paper);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #c7c7cc;
+    background: var(--rule-strong);
+    border: 3px solid var(--paper);
     border-radius: 6px;
-    border: 3px solid var(--color-canvas);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #a1a1a6;
+    background: var(--graphite);
 }

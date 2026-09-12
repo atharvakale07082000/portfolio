@@ -38,11 +38,14 @@ August 2024 - September 2024 | Pune, Maharashtra
 PROJECTS
 
 Atelier — AI Tutor Platform
-Jan 2025 – Apr 2025
-- Built an adaptive learning platform powered by a multi-agent ReAct AI system with specialist agents: QuizAgent, CurriculumAgent, ProgressAgent, DoubtAgent, and AssistantAgent.
-- Implemented a two-phase AgentRouter (keyword + LLM fallback via Together API / Qwen2.5-7B) and full ReAct loop streaming every thought, tool call, and token via Server-Sent Events.
-- Designed an Elo-based mastery tracking system (Bloom's taxonomy levels), a 13-tool registry (HF, DB, logic), and 64-thread concurrency supporting 200 simultaneous users.
-- Built with FastAPI, React + TypeScript (Vite), Zustand, LangGraph (v1), SQLite + SQLAlchemy async, MongoDB (evals), and Langfuse for observability. 190 tests passing.
+Jan 2025 – Present | Live: https://ai-based-tutor.vercel.app
+- Built an adaptive learning platform on the Strands Agents SDK: a pure orchestrator makes one structured-output LLM call per turn and returns an ordered RoutePlan across five specialists (doubt, quiz, curriculum, progress, assistant), streamed back to the learner as a single voice over Server-Sent Events.
+- Implemented progressive-disclosure skills to the Agent Skills spec — ten SKILL.md packages whose name and description sit in the prompt while the instruction body loads on demand via a load_skill tool, keeping context small until the work needs it.
+- Separated reasoning from tool traces: a stream adapter splits a first-person reasoning note out of the token stream into its own SSE event, while tool names, arguments and latencies are captured for evaluation but never sent to the client.
+- Made the live module interview resumable — an interrupt-driven agent persisted to a session, so a reloaded tab rejoins a running interview instead of losing it.
+- Designed Elo-based mastery (0–1000, mastery at 700) mapped onto Bloom's six levels, driving the difficulty of every generated quiz and course module; a 14-tool registry over HF, DB and logic implementations; and a 64-thread pool supporting 200 concurrent users.
+- Added honest backpressure: a sliding-window token bucket holds outbound calls to the NVIDIA NIM free tier at 40 rpm and announces the wait as a reasoning event rather than stalling the stream silently.
+- Built with FastAPI, Strands Agents on NVIDIA NIM (qwen3-next-80b-a3b-instruct), Hugging Face Inference for heavy generation, React 18 + TypeScript (Vite), Zustand + TanStack Query, and MongoDB via Motor as the only datastore — no SQL, no migration step. Guardrails on every agent call; online evals sampled through DeepEval and judged by NIM. 184 tests passing.
 - GitHub: https://github.com/atharvakale07082000/ai-based-tutor
 
 Document Intelligence Chatbot (RAG)
