@@ -1,452 +1,708 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════════
-   "TRACE" — design system
-   The premise: this engineer builds systems that think out loud.
-   So the site is a trace, not a product page. Blueprint stock paper,
-   hairline structure, one signal colour, telemetry set in wide mono.
+   Design tokens. The only place colours are defined.
+   Apple-inspired: one blue accent, three dark surfaces, two light ones.
+   Components use the surface-scoped tokens (--bg, --fg, --muted, --line,
+   --link), which every .surface-* class and the theme re-point.
    ═══════════════════════════════════════════════════════════════════ */
 
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
-
-/* ── Palette ──────────────────────────────────────────────────────── */
-
 :root {
+    /* Palette, as RGB channels so Tailwind's /opacity modifiers work. */
+    --accent-rgb: 0 113 227; /* #0071E3 — fills, focus, glow */
+    --accent-bright-rgb: 41 151 255; /* #2997FF — accent on dark */
+    --link-on-light-rgb: 0 102 204; /* #0066CC — 5.6:1 on #F5F5F7 */
+    --ink-0-rgb: 0 0 0; /* #000000 */
+    --ink-1-rgb: 22 22 23; /* #161617 */
+    --ink-2-rgb: 29 29 31; /* #1D1D1F */
+    --paper-rgb: 245 245 247; /* #F5F5F7 */
+    --paper-0-rgb: 255 255 255; /* #FFFFFF */
+    --text-dark-rgb: 29 29 31; /* #1D1D1F */
+    --text-dark-muted-rgb: 110 110 115; /* #6E6E73 — 4.7:1 on paper */
+    --text-light-rgb: 245 245 247; /* #F5F5F7 */
+    --text-light-muted-rgb: 161 161 166; /* #A1A1A6 — 7.9:1 on black */
+    /* Apple system tints, used for project tones and status only. */
+    --sys-blue-rgb: 10 132 255;
+    --sys-indigo-rgb: 94 92 230;
+    --sys-purple-rgb: 191 90 242;
+    --sys-pink-rgb: 255 55 95;
+    --sys-orange-rgb: 255 159 10;
+    --sys-green-rgb: 48 209 88;
+    --sys-teal-rgb: 100 210 255;
+
+    /* Type */
+    --font-sans: var(--font-inter);
+    --font-serif: var(--font-instrument-serif);
+
+    /* Fluid scale: 320px → 1440px. */
+    --fs-display: clamp(3rem, 1.86rem + 5.7vw, 7.5rem);
+    --lh-display: 0.95;
+    --ls-display: -0.045em;
+    --fs-h1: clamp(2.5rem, 1.86rem + 3.2vw, 5rem);
+    --lh-h1: 1;
+    --ls-h1: -0.04em;
+    --fs-h2: clamp(2rem, 1.54rem + 2.3vw, 3.75rem);
+    --lh-h2: 1.05;
+    --ls-h2: -0.035em;
+    --fs-h3: clamp(1.5rem, 1.27rem + 1.14vw, 2.5rem);
+    --lh-h3: 1.1;
+    --ls-h3: -0.028em;
+    --fs-h4: clamp(1.25rem, 1.16rem + 0.43vw, 1.625rem);
+    --lh-h4: 1.2;
+    --ls-h4: -0.02em;
+    --fs-lead: clamp(1.125rem, 1.04rem + 0.43vw, 1.5rem);
+    --lh-lead: 1.45;
+    --ls-lead: -0.014em;
+    --fs-body: clamp(1rem, 0.97rem + 0.14vw, 1.0625rem);
+    --lh-body: 1.6;
+    --ls-body: -0.008em;
+    --fs-small: 0.9375rem;
+    --lh-small: 1.5;
+    --ls-small: -0.005em;
+    --fs-caption: 0.75rem;
+    --lh-caption: 1.4;
+    --ls-caption: 0.01em;
+    --fs-code: 0.875rem;
+    --lh-code: 1.5;
+    --ls-code: 0;
+
+    --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+    --nav-h: 72px;
+}
+
+/* ── Surfaces ─────────────────────────────────────────────────────── */
+
+:root,
+.surface-light {
+    --bg-rgb: var(--paper-rgb);
+    --raised-rgb: var(--paper-0-rgb);
+    --fg-rgb: var(--text-dark-rgb);
+    --muted-rgb: var(--text-dark-muted-rgb);
+    --link-rgb: var(--link-on-light-rgb);
+    --line: rgb(0 0 0 / 0.1);
+    --line-strong: rgb(0 0 0 / 0.22);
+    --glass: rgb(255 255 255 / 0.72);
+    --glass-line: rgb(0 0 0 / 0.08);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 18px 40px -24px rgb(0 0 0 / 0.25);
     color-scheme: light;
-
-    --paper: #edeff2;
-    /* blueprint stock */
-    --surface: #f8f9fb;
-    /* raised panel */
-    --sunk: #e3e7ec;
-    /* recessed / tag ground */
-    --ink: #0f161c;
-    /* deep blue-black */
-    --graphite: #576673;
-    /* secondary text — 5.3:1 on paper */
-    --rule: #ccd4dc;
-    /* hairline */
-    --rule-strong: #7c8a97;
-    /* 3.1:1 on paper — separators and control borders stay perceivable */
-    --signal: #4a27d9;
-    /* electric violet — interactive + live */
-    --signal-ink: #ffffff;
-    /* text on signal */
-    --verified: #0e6f63;
-    /* teal — measured / passing */
-
-    --shadow-panel: 0 1px 2px rgba(15, 22, 28, 0.04);
-    --shadow-lift: 0 18px 40px -22px rgba(15, 22, 28, 0.28);
-    --shadow-float: 0 24px 56px -18px rgba(15, 22, 28, 0.34);
 }
 
-[data-theme="dark"] {
+.surface-white {
+    --bg-rgb: var(--paper-0-rgb);
+    --raised-rgb: var(--paper-rgb);
+    --fg-rgb: var(--text-dark-rgb);
+    --muted-rgb: var(--text-dark-muted-rgb);
+    --link-rgb: var(--link-on-light-rgb);
+    --line: rgb(0 0 0 / 0.1);
+    --line-strong: rgb(0 0 0 / 0.22);
+    --glass: rgb(255 255 255 / 0.72);
+    --glass-line: rgb(0 0 0 / 0.08);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 18px 40px -24px rgb(0 0 0 / 0.25);
+    color-scheme: light;
+}
+
+.surface-dark,
+.surface-dark-2 {
+    --bg-rgb: var(--ink-0-rgb);
+    --raised-rgb: var(--ink-2-rgb);
+    --fg-rgb: var(--text-light-rgb);
+    --muted-rgb: var(--text-light-muted-rgb);
+    --link-rgb: var(--accent-bright-rgb);
+    --line: rgb(255 255 255 / 0.12);
+    --line-strong: rgb(255 255 255 / 0.26);
+    --glass: rgb(29 29 31 / 0.72);
+    --glass-line: rgb(255 255 255 / 0.1);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 24px 48px -24px rgb(0 0 0 / 0.8);
     color-scheme: dark;
-
-    --paper: #0b1014;
-    --surface: #141b21;
-    --sunk: #1c242c;
-    --ink: #e9eef2;
-    --graphite: #8d9ba8;
-    /* 6.4:1 on paper */
-    --rule: #253039;
-    --rule-strong: #576976;
-    /* 3.1:1 on paper */
-    --signal: #9b80ff;
-    --signal-ink: #120a2e;
-    --verified: #2dd4bf;
-
-    --shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-lift: 0 18px 40px -22px rgba(0, 0, 0, 0.7);
-    --shadow-float: 0 24px 56px -18px rgba(0, 0, 0, 0.8);
 }
 
-/* ── Theme bridge ─────────────────────────────────────────────────── */
+.surface-dark-2 {
+    --bg-rgb: var(--ink-1-rgb);
+}
 
-@theme inline {
-    --color-paper: var(--paper);
-    --color-surface: var(--surface);
-    --color-sunk: var(--sunk);
-    --color-ink: var(--ink);
-    --color-graphite: var(--graphite);
-    --color-rule: var(--rule);
-    --color-rule-strong: var(--rule-strong);
-    --color-signal: var(--signal);
-    --color-signal-ink: var(--signal-ink);
-    --color-verified: var(--verified);
+/* Dark theme: light surfaces turn into the two softer dark greys, so the
+   rhythm of alternating sections still reads. */
+[data-theme="dark"],
+[data-theme="dark"] .surface-light,
+[data-theme="dark"] .surface-white {
+    --bg-rgb: var(--ink-1-rgb);
+    --raised-rgb: var(--ink-2-rgb);
+    --fg-rgb: var(--text-light-rgb);
+    --muted-rgb: var(--text-light-muted-rgb);
+    --link-rgb: var(--accent-bright-rgb);
+    --line: rgb(255 255 255 / 0.12);
+    --line-strong: rgb(255 255 255 / 0.26);
+    --glass: rgb(29 29 31 / 0.72);
+    --glass-line: rgb(255 255 255 / 0.1);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 24px 48px -24px rgb(0 0 0 / 0.8);
+    color-scheme: dark;
+}
 
-    --font-display: var(--font-bricolage), "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --font-sans: var(--font-instrument), "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --font-mono: var(--font-martian), ui-monospace, "SF Mono", Menlo, monospace;
+[data-theme="dark"] .surface-white {
+    --bg-rgb: var(--ink-2-rgb);
+    --raised-rgb: var(--ink-1-rgb);
+}
 
-    /* One scale. Every size on the site comes from here. */
-    --text-micro: 0.6875rem;
-    /* 11 — telemetry labels */
-    --text-caption: 0.8125rem;
-    /* 13 — captions, tags */
-    --text-small: 0.9375rem;
-    /* 15 — dense body */
-    --text-body: 1.0625rem;
-    /* 17 — body */
-    --text-lead: 1.1875rem;
-    /* 19 — lead-in */
-    --text-title: 1.375rem;
-    /* 22 — card titles */
-
-    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+@layer base {
+    [class*="surface-"] {
+        background-color: rgb(var(--bg-rgb));
+        color: rgb(var(--fg-rgb));
+    }
 }
 
 /* ── Base ─────────────────────────────────────────────────────────── */
 
-html {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
+@layer base {
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        -webkit-text-size-adjust: 100%;
+        background-color: rgb(var(--bg-rgb));
+    }
+
+    body {
+        @apply font-sans text-body;
+        background-color: rgb(var(--bg-rgb));
+        color: rgb(var(--fg-rgb));
+        overflow-x: clip;
+    }
+
+    ::selection {
+        background: rgb(var(--accent-rgb) / 0.25);
+    }
+
+    :focus-visible {
+        outline: 2px solid rgb(var(--link-rgb));
+        outline-offset: 3px;
+        border-radius: 6px;
+    }
+
+    img,
+    svg,
+    video {
+        display: block;
+    }
+
+    [hidden] {
+        display: none !important;
+    }
 }
 
-body {
-    background-color: var(--paper);
-    color: var(--ink);
-    font-family: var(--font-instrument), "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 1.0625rem;
-    line-height: 1.6;
-    overflow-x: hidden;
+/* Lenis */
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+    overflow: clip;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
 }
 
-::selection {
-    background: color-mix(in srgb, var(--signal) 22%, transparent);
-    color: var(--ink);
+/* ── Utilities ────────────────────────────────────────────────────── */
+
+@layer components {
+    .shell {
+        width: 100%;
+        max-width: 1280px;
+        margin-inline: auto;
+        padding-inline: var(--gutter);
+    }
+
+    .label {
+        font-size: var(--fs-caption);
+        line-height: var(--lh-caption);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    .accent-word {
+        font-family: var(--font-serif), Georgia, serif;
+        font-style: italic;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        padding-inline-end: 0.06em;
+        background-image: linear-gradient(
+            100deg,
+            rgb(var(--link-rgb)) 0%,
+            rgb(var(--accent-bright-rgb)) 55%,
+            rgb(var(--sys-indigo-rgb)) 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .glass {
+        --btn-bg: var(--glass);
+        background: var(--glass);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        backdrop-filter: saturate(180%) blur(20px);
+        border: 1px solid var(--glass-line);
+    }
+
+    .card {
+        background: rgb(var(--raised-rgb));
+        border: 1px solid var(--line);
+        border-radius: 1.5rem;
+    }
+
+    .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4em;
+        min-height: 32px;
+        padding: 0.25rem 0.8rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        font-size: var(--fs-caption);
+        line-height: 1.2;
+        letter-spacing: 0.01em;
+        color: rgb(var(--muted-rgb));
+        background: rgb(var(--raised-rgb));
+    }
+
+    .hairline {
+        border-color: var(--line);
+    }
 }
 
-/* ── Type roles ───────────────────────────────────────────────────── */
+@layer components {
+/* ═══════════════════════════════════════════════════════════════════
+   Button system — one .btn class for every pill and CTA.
+   Fill grows from where the pointer entered (--bx/--by, set by the
+   delegated listener in ButtonFx) and drains toward where it left.
+   Defaults live in :where() so Tailwind arbitrary values win.
+   ═══════════════════════════════════════════════════════════════════ */
 
-/* Display: Bricolage Grotesque, tight and set large. */
-.display {
-    font-family: var(--font-bricolage), "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 0.94;
+:where(.btn) {
+    --btn-bg: rgb(var(--fg-rgb));
+    --btn-ink: rgb(var(--bg-rgb));
+    --btn-fill: rgb(var(--accent-rgb));
+    --btn-fg: #fff;
+    --btn-glow: rgb(var(--accent-rgb) / 0.4);
+    --btn-border: transparent;
 }
 
-.display-tight {
-    letter-spacing: -0.045em;
+:where(.btn-ghost) {
+    --btn-bg: transparent;
+    --btn-ink: rgb(var(--fg-rgb));
+    --btn-border: var(--line-strong);
 }
 
-/* The fluid sizes. clamp() so there is no jump at any width. */
-.t-hero {
-    font-size: clamp(3rem, 11.5vw, 8.75rem);
+:where(.btn-accent) {
+    --btn-bg: rgb(var(--accent-rgb));
+    --btn-ink: #fff;
+    --btn-fill: rgb(var(--fg-rgb));
+    --btn-fg: rgb(var(--bg-rgb));
+    --btn-glow: rgb(var(--accent-rgb) / 0.45);
 }
 
-.t-h1 {
-    font-size: clamp(2.25rem, 6.5vw, 4.25rem);
-}
-
-.t-h2 {
-    font-size: clamp(1.75rem, 4vw, 2.75rem);
-}
-
-.t-h3 {
-    font-size: clamp(1.375rem, 2.4vw, 1.75rem);
-}
-
-.t-email {
-    /* Sized to keep one unbreakable address on one line, phone included. */
-    font-size: clamp(1.25rem, 5.1vw, 2.75rem);
-}
-
-.t-lead {
-    font-size: clamp(1.0625rem, 1.9vw, 1.375rem);
-    line-height: 1.5;
-    letter-spacing: -0.012em;
-}
-
-/* Telemetry: Martian Mono. Small, wide, tracked out. Labels only —
-   never a paragraph. */
-.telemetry {
-    font-family: var(--font-martian), ui-monospace, "SF Mono", Menlo, monospace;
-    font-size: 0.6875rem;
+.btn {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55em;
+    min-height: 44px;
+    padding: 0 1.3em;
+    border-radius: 999px;
+    border: 1px solid var(--btn-border);
+    background: var(--btn-bg);
+    color: var(--btn-ink);
+    font-size: var(--fs-small);
+    line-height: 1;
     font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    font-feature-settings: "tnum" 1;
-    line-height: 1.4;
-}
-
-.numeral {
-    font-family: var(--font-martian), ui-monospace, "SF Mono", Menlo, monospace;
-    font-feature-settings: "tnum" 1;
     letter-spacing: -0.01em;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+        transform 0.5s var(--ease-out),
+        box-shadow 0.5s var(--ease-out),
+        color 0.45s var(--ease-out),
+        border-color 0.45s var(--ease-out);
 }
 
-/* ── Materials ────────────────────────────────────────────────────── */
-
-.panel {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    box-shadow: var(--shadow-panel);
+.btn::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: var(--bx, 50%);
+    top: var(--by, 50%);
+    width: 300%;
+    aspect-ratio: 1;
+    margin-left: -150%;
+    margin-top: -150%;
+    border-radius: 50%;
+    background: var(--btn-fill);
+    transform: scale(0);
+    transition: transform 0.55s var(--ease-out);
+    pointer-events: none;
 }
 
-.panel-hover {
-    transition: border-color 0.35s var(--ease-out-expo),
-        box-shadow 0.35s var(--ease-out-expo),
-        transform 0.35s var(--ease-out-expo);
+/* A square button needs the circle sized from its height too. */
+.btn-icon::before {
+    width: 300%;
 }
 
-.panel-hover:hover {
-    border-color: var(--rule-strong);
-    box-shadow: var(--shadow-lift);
-    transform: translateY(-2px);
+.btn-icon {
+    padding: 0;
+    width: 44px;
+    height: 44px;
 }
 
-.chrome {
-    background: color-mix(in srgb, var(--paper) 90%, transparent);
-    -webkit-backdrop-filter: blur(16px);
-    backdrop-filter: blur(16px);
+.btn-sm {
+    min-height: 36px;
+    padding: 0 1em;
+    font-size: var(--fs-caption);
 }
 
-/* Hairline — the primary structural device. */
-.rule-t {
-    border-top: 1px solid var(--rule);
+.btn-lg {
+    min-height: 52px;
+    padding: 0 1.6em;
+    font-size: var(--fs-body);
 }
 
-.rule-b {
-    border-bottom: 1px solid var(--rule);
+.btn[disabled],
+.btn[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
 }
 
-/* ── Signature: the trace rail ────────────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+    .btn:not([disabled]):hover {
+        color: var(--btn-fg);
+        border-color: transparent;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px -12px var(--btn-glow);
+    }
+    .btn:not([disabled]):hover::before {
+        transform: scale(1);
+    }
+}
 
-/* The rail lives in the gutter, so it only appears once there is a real
-   gutter to live in. Below 1400px the content column reaches too far left
-   and the rail would sit on top of the text. Past that it tracks the
-   column rather than drifting to the window edge. */
-.rail-wrap {
+/* Rolling label: the visible copy rolls up, an identical copy follows. */
+.btn-label {
+    position: relative;
+    display: inline-flex;
+    overflow: hidden;
+    padding-block: 0.15em;
+    margin-block: -0.15em;
+}
+.btn-label > span {
+    display: block;
+    transition: transform 0.55s var(--ease-out);
+}
+.btn-label > span + span {
+    position: absolute;
+    inset: 0.15em 0 auto 0;
+    transform: translateY(130%);
+}
+
+/* Icon: leaves up-and-right, its copy arrives from down-and-left. */
+.btn-icon-swap {
+    position: relative;
+    display: inline-flex;
+    overflow: hidden;
+    width: 1.05em;
+    height: 1.05em;
+    flex: none;
+}
+.btn-icon-swap > span {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    transition: transform 0.55s var(--ease-out);
+}
+.btn-icon-swap > span + span {
+    transform: translate(-120%, 120%);
+}
+.btn-icon-swap[data-dir="down"] > span + span {
+    transform: translateY(-120%);
+}
+.btn-icon-swap[data-dir="right"] > span + span {
+    transform: translateX(-120%);
+}
+.btn-icon-swap[data-dir="up"] > span + span {
+    transform: translateY(120%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .btn:hover .btn-label > span:first-child {
+        transform: translateY(-130%);
+    }
+    .btn:hover .btn-label > span + span {
+        transform: translateY(0);
+    }
+    .btn:hover .btn-icon-swap > span:first-child {
+        transform: translate(120%, -120%);
+    }
+    .btn:hover .btn-icon-swap[data-dir="down"] > span:first-child {
+        transform: translateY(120%);
+    }
+    .btn:hover .btn-icon-swap[data-dir="right"] > span:first-child {
+        transform: translateX(120%);
+    }
+    .btn:hover .btn-icon-swap[data-dir="up"] > span:first-child {
+        transform: translateY(-120%);
+    }
+    .btn:hover .btn-icon-swap > span + span {
+        transform: translate(0, 0);
+    }
+}
+
+/* ── Roll: letter-by-letter link label ────────────────────────────── */
+
+/* Each letter clips its own copy, so a long label (an email) can wrap. */
+.roll {
+    display: inline;
+}
+.roll-word {
+    display: inline-flex;
+    flex-wrap: wrap;
+    max-width: 100%;
+    vertical-align: bottom;
+}
+.roll-clip {
+    display: inline-block;
+    overflow: hidden;
+    padding-block: 0.12em;
+    margin-block: -0.12em;
+}
+.roll-letter {
+    position: relative;
+    display: inline-block;
+    white-space: pre;
+    transition: transform 0.5s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 18ms);
+}
+.roll-letter::after {
+    content: attr(data-l);
+    position: absolute;
+    left: 0;
+    top: 130%;
+}
+@media (hover: hover) and (pointer: fine) {
+    .roll-host:hover .roll-letter {
+        transform: translateY(-130%);
+    }
+}
+.roll-host:focus-visible .roll-letter {
+    transform: translateY(-130%);
+}
+
+}
+
+/* ── Loader ───────────────────────────────────────────────────────── */
+
+html[data-booted] .boot {
     display: none;
 }
 
-@media (min-width: 1400px) {
-    .rail-wrap {
-        display: block;
-        left: max(1.5rem, calc(50% - 710px));
-    }
-}
+/* ── Keyframes ────────────────────────────────────────────────────── */
 
-/* The page is one request. Each section is a span. The rail marks them. */
-.rail {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background: var(--rule);
-}
-
-.rail-node {
-    position: absolute;
-    left: 50%;
-    width: 7px;
-    height: 7px;
-    margin-left: -3.5px;
-    border-radius: 50%;
-    background: var(--paper);
-    border: 1px solid var(--rule-strong);
-    transition: background 0.4s var(--ease-out-expo),
-        border-color 0.4s var(--ease-out-expo);
-}
-
-.rail-node[data-active="true"] {
-    background: var(--signal);
-    border-color: var(--signal);
-}
-
-/* The scroll-linked span fill. */
-.rail-fill {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 1px;
-    background: var(--signal);
-    transform-origin: top;
-}
-
-/* ── Streaming caret ──────────────────────────────────────────────── */
-
-.caret {
-    display: inline-block;
-    width: 0.5ch;
-    height: 1em;
-    margin-left: 0.12em;
-    vertical-align: -0.12em;
-    background: var(--signal);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .caret {
-        animation: caret-blink 1.05s steps(2, start) infinite;
-    }
-}
-
-@keyframes caret-blink {
-    0%,
+@keyframes ping {
+    75%,
     100% {
-        opacity: 1;
+        transform: scale(2.2);
+        opacity: 0;
     }
+}
+.ping {
+    animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
 
+@keyframes dash-flow {
+    to {
+        stroke-dashoffset: -24;
+    }
+}
+
+@keyframes caret {
     50% {
         opacity: 0;
     }
 }
-
-/* Live pulse — used once, on the one thing that is actually live. */
-.pulse-ring {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: var(--signal);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .pulse-ring {
-        animation: pulse-out 2s var(--ease-out-expo) infinite;
-    }
-}
-
-@keyframes pulse-out {
-    0% {
-        opacity: 0.55;
-        transform: scale(1);
-    }
-
-    70%,
-    100% {
-        opacity: 0;
-        transform: scale(2.6);
-    }
-}
-
-/* ── Controls ─────────────────────────────────────────────────────── */
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 500;
-    font-size: 0.9375rem;
-    letter-spacing: -0.01em;
-    min-height: 44px;
-    padding: 0 1.375rem;
-    border-radius: 2px;
-    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease,
-        transform 0.12s ease;
-}
-
-.btn:active {
-    transform: translateY(1px);
-}
-
-.btn-signal {
-    background: var(--signal);
-    color: var(--signal-ink);
-    border: 1px solid var(--signal);
-}
-
-.btn-signal:hover {
-    background: color-mix(in srgb, var(--signal) 86%, var(--ink));
-}
-
-.btn-quiet {
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid var(--rule-strong);
-}
-
-.btn-quiet:hover {
-    border-color: var(--ink);
-    background: var(--surface);
-}
-
-/* Inline link — underline that grows, no colour swap needed. */
-.link {
-    color: var(--ink);
-    text-decoration: none;
-    background-image: linear-gradient(var(--signal), var(--signal));
-    background-size: 0% 1px;
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    transition: background-size 0.3s var(--ease-out-expo), color 0.2s ease;
-}
-
-.link:hover {
-    color: var(--signal);
-    background-size: 100% 1px;
-}
-
- /* A .link that also needs to be a comfortable tap target. Padding grows
-   the hit area; the underline is nudged up to stay against the text. */
-.link-block {
+.caret {
     display: inline-block;
-    padding-block: 0.25rem;
-    background-position: 0 calc(100% - 0.25rem);
+    width: 0.5em;
+    height: 1em;
+    margin-left: 0.1em;
+    vertical-align: -0.12em;
+    background: rgb(var(--link-rgb));
+    animation: caret 1s steps(1) infinite;
 }
 
-.link-signal {
-    color: var(--signal);
-    font-weight: 500;
+@keyframes scroll-hint {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
 }
 
-/* Tag / chip — recessed, never a pill. */
-.tag {
-    font-family: var(--font-martian), ui-monospace, monospace;
-    font-size: 0.6875rem;
-    letter-spacing: 0.01em;
-    color: var(--graphite);
-    background: var(--sunk);
-    padding: 0.25rem 0.5rem;
-    border-radius: 2px;
-    white-space: nowrap;
-    transition: color 0.25s ease, background 0.25s ease;
-}
-
-/* ── Focus & motion floor ─────────────────────────────────────────── */
-
-:focus-visible {
-    outline: 2px solid var(--signal);
-    outline-offset: 3px;
-    border-radius: 2px;
-}
+/* ── Reduced motion: every transition and keyframe collapses ──────── */
 
 @media (prefers-reduced-motion: reduce) {
-
-    html {
-        scroll-behavior: auto;
-    }
-
     *,
     *::before,
     *::after {
-        animation-duration: 0.001ms !important;
+        animation-duration: 1ms !important;
         animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
+        transition-duration: 1ms !important;
+        transition-delay: 0ms !important;
+        scroll-behavior: auto !important;
     }
 }
 
-/* ── Scrollbar ────────────────────────────────────────────────────── */
-
-::-webkit-scrollbar {
-    width: 11px;
+/* Until the loader finishes (or the head script marks a returning visit),
+   the page does not scroll. */
+html:not([data-booted]) {
+    overflow: hidden;
 }
 
-::-webkit-scrollbar-track {
-    background: var(--paper);
+/* Locking scroll (loader, open menu) must not shift the layout. */
+html {
+    scrollbar-gutter: stable;
 }
 
-::-webkit-scrollbar-thumb {
-    background: var(--rule-strong);
-    border: 3px solid var(--paper);
-    border-radius: 6px;
+@layer components {
+/* Label that swaps to a different string (e.g. a social name → its handle).
+   Both copies share one grid cell so the box fits the longer one. */
+.btn-label-swap {
+    display: inline-grid;
+    overflow: hidden;
+    padding-block: 0.15em;
+    margin-block: -0.15em;
+}
+.btn-label-swap > span {
+    grid-area: 1 / 1;
+    transition: transform 0.55s var(--ease-out);
+}
+.btn-label-swap > span + span {
+    transform: translateY(130%);
+}
+@media (hover: hover) and (pointer: fine) {
+    .btn:hover .btn-label-swap > span:first-child {
+        transform: translateY(-130%);
+    }
+    .btn:hover .btn-label-swap > span + span {
+        transform: translateY(0);
+    }
+    .btn:hover .btn-label-fit > span:first-child {
+        position: absolute;
+        left: 0;
+        top: 0.15em;
+        transform: translateY(-130%);
+    }
+    .btn:hover .btn-label-fit > span + span {
+        position: static;
+        transform: none;
+    }
+}
+.btn:focus-visible .btn-label-swap > span:first-child {
+    transform: translateY(-130%);
+}
+.btn:focus-visible .btn-label-swap > span + span {
+    transform: translateY(0);
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: var(--graphite);
+/* Menu list: hovering one item dims the rest. */
+@media (hover: hover) and (pointer: fine) {
+    .dim-list:hover > li:not(:hover) {
+        opacity: 0.32;
+    }
+}
+.dim-list:has(:focus-visible) > li:not(:has(:focus-visible)) {
+    opacity: 0.32;
+}
+
+/* Label that rolls to a different-length string and resizes to fit it.
+   Width animates where interpolate-size is supported and snaps elsewhere. */
+.btn-label-fit {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-block: 0.15em;
+    margin-block: -0.15em;
+    interpolate-size: allow-keywords;
+    transition: width 0.5s var(--ease-out);
+}
+.btn-label-fit > span {
+    display: block;
+    transition: transform 0.55s var(--ease-out);
+}
+.btn-label-fit > span + span {
+    position: absolute;
+    left: 0;
+    top: 0.15em;
+    transform: translateY(130%);
+}
+.btn:focus-visible .btn-label-fit > span:first-child {
+    position: absolute;
+    left: 0;
+    top: 0.15em;
+    transform: translateY(-130%);
+}
+.btn:focus-visible .btn-label-fit > span + span {
+    position: static;
+    transform: none;
+}
+
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@layer components {
+    .flow-line {
+        stroke-dasharray: 4 8;
+        animation: dash-flow 0.9s linear infinite;
+    }
+}
+
+@keyframes lane {
+    from {
+        transform: translateX(-8%);
+    }
+    to {
+        transform: translateX(100%);
+    }
+}
+@layer components {
+    .lane-dot {
+        animation-name: lane;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+    }
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
 }

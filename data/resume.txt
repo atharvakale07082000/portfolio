@@ -1,79 +1,86 @@
 Atharva Shripad Kale
-Senior Backend & AI Engineer
-Phone: +919326266521
+AI & Backend Engineer — Generative AI, LLM systems, agentic AI, backend and distributed systems
+Location: Pune, India
 Email: atharva.skale07@gmail.com
 LinkedIn: linkedin.com/in/atharva-kale-7b0b53177
 GitHub: github.com/atharvakale07082000
 
 SUMMARY
-Passionate Senior Backend & AI Engineer with expertise in Generative AI, Agentic AI, and scalable backend architectures. Proven track record of architecting RAG pipelines, optimizing microservices, and leading AI roadmaps. Experienced in building high-performance systems using Python, FastAPI, and Vector Databases.
-
-SKILLS
-- Core Skills: Python, Generative AI (GenAI), Agentic AI, LLMs (OpenAI, LLaMA, Mistral), RAG Pipelines, Vector Databases (Pinecone, FAISS), LangChain, LangGraph, CrewAI.
-- Frameworks & Libraries: FastAPI, Flask, Pandas, NumPy, Celery, Hugging Face, Boto3, REST APIs, PyTorch (basic).
-- Databases & Search: MongoDB, PostgreSQL, Redis, DocumentDB, MongoDB Atlas, Elasticsearch.
-- Cloud & DevOps: AWS (EC2, S3, Lambda, RDS, DynamoDB), Docker, Kubernetes, Terraform, GitHub Actions, CI/CD Pipelines.
-- Collaboration & Tools: Git, Jira, Confluence, Notion, Agile/Scrum.
+AI Engineer with hands-on experience building multi-agent and agentic AI platforms, text-to-SQL systems and production RAG pipelines. Strong in microservices architecture, MLOps, evals in CI/CD and AWS deployment, delivering a 60% latency reduction, 2x cost optimisation and 10x throughput improvement. Winner of the Rolls-Royce Excellence Award for early delivery, with experience leading small teams and working directly with stakeholders. Primarily an AI and backend engineer, who also builds React / Next.js front ends for his own systems.
 
 EXPERIENCE
 
+AI Engineer | Onit
+July 2026 – Present | Pune, India
+- Building a dynamic text-to-SQL agent that converts natural-language questions into executable queries against live, multi-tenant production schemas ranging from 11 to 50 tables per tenant.
+- Designed a multi-agent architecture on the Strands Agents framework, with per-tenant schemas cached in Redis; cut end-to-end query time from 30s to 11s on dynamic schemas with a 4s time-to-first-token.
+- Integrated interrupts and human-in-the-loop delegates into the agent loop, pausing execution for user confirmation on ambiguous or high-impact queries and resuming with the corrected context.
+- Built a custom evals suite and dashboard for pre-deployment checks, and wired evals into the CI/CD pipeline to catch regressions before ship.
+
 Senior Backend & AI Engineer | Anervea Data Labs
-August 2025 – Present | Pune, Maharashtra
-- Leading backend and AI architecture for AlfaKinetic, a GenAI-driven Competitive Intelligence platform delivering real-time business insights.
-- Architected RAG pipelines using LangChain, Hugging Face, and Vector DBs (Pinecone, Qdrant), cutting data retrieval latency by 60%.
-- Designed scalable Python microservices with FastAPI, Kafka, and Celery, enabling 10× higher throughput for data ingestion and semantic search.
-- Partnered with leadership and stakeholders to define the GenAI roadmap, and mentored engineers on LLM system design and CI/CD automation.
+August 2025 – June 2026 | India
+- Led development of GenAI and agentic AI systems for a competitive-intelligence platform (AlfaKinetic) serving global biopharma clients.
+- Created an LLM-powered RAG chatbot with LangChain and Hugging Face, cutting latency by 60% and costs by 2x — awarded the Rolls-Royce Excellence Award for delivering it ahead of schedule.
+- Architected a scalable microservices backend with FastAPI and RabbitMQ async queues, boosting data-ingestion throughput by 10x.
+- Migrated the chatbot to an agentic RAG workflow in 4 days for the Care-Easy diabetes application, replacing static retrieval with tool-driven decision flows.
+- Managed a 3-engineer team delivering 45+ features in a 2-week sprint, translating business needs into AI solutions.
+- Implemented RBAC across 6 user roles and deployed the AI services on AWS, running both client environments in production.
 
 Backend Engineer | Anervea Data Labs
-September 2024 – August 2025 | Pune, Maharashtra
-- Developed high-performance REST APIs and backend workflows, reducing API latency from 7s to <100ms.
-- Built automated data extraction systems using Playwright, Celery, and Selenium, boosting research throughput by 3×.
-- Implemented resilient ETL pipelines and integrated MongoDB + Redis for low-latency, real-time data analytics.
-- Collaborated cross-functionally to deliver backend automation and competitive intelligence features under tight timelines.
+September 2024 – August 2025 | India
+- Designed high-performance APIs using FastAPI and Flask, reducing response latency from 3s to 200ms.
+- Built ETL pipelines on MongoDB and Redis powering real-time analytics for client dashboards.
+- Developed automation pipelines using Playwright, Selenium and Celery, improving throughput by 3x.
+- Owned 4+ backend services across 2 client environments, delivering to a two-week sprint cadence.
 
 Python Full Stack Developer Intern | Netra Labs
-August 2024 - September 2024 | Pune, Maharashtra
-- Reduced front-end load times by 25% using modern JavaScript frameworks such as NextJS and ReactQuery, improving usability and engagement by 15% in data analytics applications.
+August 2024 – September 2024 | Pune
+- Reduced front-end load times by 25% with Next.js and React Query, improving usability and engagement by 15% in data-analytics applications.
+
+SKILLS
+- Generative AI: LangChain, LangGraph, Strands Agents, CrewAI, Pydantic AI, RAG, agentic AI, text-to-SQL, MCP, RAGAS, Langfuse, PyTorch, NLP.
+- Backend: Python, FastAPI, Flask, distributed systems, microservices, RabbitMQ, Celery, API integrations.
+- Databases: MongoDB, PostgreSQL, Redis, Pinecone, ChromaDB, FAISS, Neo4j.
+- Cloud: AWS (EC2, S3, Lambda, RDS, SQS), GCP, AWS Bedrock, Google Vertex AI, Gemini API, OpenAI API, Hugging Face.
+- DevOps: Docker, GitHub Actions, CI/CD, evals in CI, Linux.
+- Frontend (secondary): React, Next.js, TypeScript, Tailwind CSS.
+- Tools: Git, JIRA, Selenium, Playwright, Claude Code, Cursor, n8n.
 
 PROJECTS
 
-Atelier — AI Tutor Platform
-Jan 2025 – Present | Live: https://ai-based-tutor.vercel.app
-- Built an adaptive learning platform on the Strands Agents SDK: a pure orchestrator makes one structured-output LLM call per turn and returns an ordered RoutePlan across five specialists (doubt, quiz, curriculum, progress, assistant), streamed back to the learner as a single voice over Server-Sent Events.
-- Implemented progressive-disclosure skills to the Agent Skills spec — ten SKILL.md packages whose name and description sit in the prompt while the instruction body loads on demand via a load_skill tool, keeping context small until the work needs it.
-- Separated reasoning from tool traces: a stream adapter splits a first-person reasoning note out of the token stream into its own SSE event, while tool names, arguments and latencies are captured for evaluation but never sent to the client.
-- Made the live module interview resumable — an interrupt-driven agent persisted to a session, so a reloaded tab rejoins a running interview instead of losing it.
-- Designed Elo-based mastery (0–1000, mastery at 700) mapped onto Bloom's six levels, driving the difficulty of every generated quiz and course module; a 14-tool registry over HF, DB and logic implementations; and a 64-thread pool supporting 200 concurrent users.
-- Added honest backpressure: a sliding-window token bucket holds outbound calls to the NVIDIA NIM free tier at 40 rpm and announces the wait as a reasoning event rather than stalling the stream silently.
-- Built with FastAPI, Strands Agents on NVIDIA NIM (qwen3-next-80b-a3b-instruct), Hugging Face Inference for heavy generation, React 18 + TypeScript (Vite), Zustand + TanStack Query, and MongoDB via Motor as the only datastore — no SQL, no migration step. Guardrails on every agent call; online evals sampled through DeepEval and judged by NIM. 184 tests passing.
-- GitHub: https://github.com/atharvakale07082000/ai-based-tutor
+Atelier — AI Tutor Platform (Jan 2025 – present) | Live: https://ai-based-tutor.vercel.app | GitHub: https://github.com/atharvakale07082000/ai-based-tutor
+- A Strands orchestrator makes one structured-output LLM call per turn and returns an ordered RoutePlan across five specialists (doubt, quiz, curriculum, progress, assistant), streamed back as a single voice over Server-Sent Events.
+- Progressive-disclosure skills: ten SKILL.md packages whose name and description sit in the prompt while the body loads on demand via a load_skill tool.
+- Reasoning is streamed separately from tool traces; resumable live module interviews; Elo-based mastery (0–1000, mastery at 700) mapped onto Bloom's six levels.
+- 14-tool registry, 64-thread pool supporting 200 concurrent users, sliding-window token bucket for the NVIDIA NIM free tier at 40 rpm. FastAPI, Strands Agents on NVIDIA NIM, React 18 + TypeScript, MongoDB. 184 tests passing.
 
-Document Intelligence Chatbot (RAG)
-Oct 2025 – Dec 2025
-- Engineered a production-grade RAG system enabling real-time chat over multi-format documents (PDF, DOCX, PPTX) using Google Gemini and vector embeddings.
-- Implemented Server-Sent Events (SSE) for asynchronous response streaming, significantly enhancing the UX during complex document processing.
-- Designed a robust data architecture utilizing MongoDB for session metadata and ChromaDB for high-dimensional vector storage.
+NeuralScope — AI Observability Platform
+- "Datadog for AI agents": trace explorer with waterfall and DAG views, prompt registry with versioning, diffs and A/B deploys, token and cost intelligence per model, a replay studio for past traces, and alerts on error rates, cost spikes and latency.
+- FastAPI, Beanie and Motor on MongoDB, Redis, React 18 + Vite, Zustand, TanStack Query, Recharts.
 
-Resume Screening and Similarity Analysis
-Aug 2023 - Dec 2023
-- Developed a supervised learning algorithm using NLP and word cloud analysis for resume screening, achieving 94% testing accuracy.
-- Built and fine-tuned machine learning models with Python and TensorFlow, increasing prediction accuracy by 15%.
+Aevum — Real-time Collaborative Decision Platform (team project)
+- Atharva built the AI service (aevum_ai) on Strands Agents: every number (vote shares, turnout, lead margin, role divergence, risk) is computed in code and the model only writes the prose; without a model it degrades to deterministic templates.
+- The service borrows the caller's bearer token and organisation header, so it adds no new tenant boundary. Backend is Spring Boot 4 / Java 21 with JWT, WebSocket/STOMP, PostgreSQL and Redis; frontend is Next.js 16.
+
+ECHO — Local Multi-agent Voice Assistant for macOS
+- Runs fully on-device on Apple Silicon with Ollama and Llama 3.2, faster-whisper speech-to-text and macOS text-to-speech.
+- Plans each task as a DAG and executes it through 20+ specialised agents behind a permission engine with six tiers, audit logging, snapshots and rollback, and secret redaction before any log or model call.
+
+AI Document Intelligence Chatbot
+- RAG chatbot supporting 85+ document formats on MongoDB and ChromaDB with Gemini, improving engagement by 35%.
+- SSE-based token streaming so answers render while generating instead of after completion.
+
+Resume Screening & Similarity Analysis
+- ML model achieving 94% accuracy using feature engineering and fine-tuning; entity extraction and skill matching improved workflow efficiency by 15%.
 
 Sentiment Analysis of Amazon Reviews
-Feb 2023 - Apr 2023
-- Built an NLP-based sentiment analysis model using Google BigQuery for data warehousing, achieving 92.22% accuracy.
-- Validated review authenticity and provided actionable insights into consumer behavior.
+- NLP sentiment model over a Google BigQuery warehouse at 92.22% accuracy.
 
 EDUCATION
+- Master of Science, Computer Science — MIT World Peace University, Pune (2022 – 2024), CGPA 8.14.
+- Bachelor of Science, Computer Science — Ramnarain Ruia Autonomous College, Mumbai (2018 – 2021), CGPA 7.33.
 
-Master of Science (M.S.), Computer Science
-MIT World Peace University | August 2022 - May 2024
-CGPA: 8.14
-
-Bachelors of Computer Science (BSc CS)
-Ramnarain Ruia Autonomous College | June 2018 - May 2021
-CGPA: 7.33
-
-CERTIFICATIONS
-- AWS Machine Learning Foundations (May 2024 - June 2024)
-- Professional Certificate in Cloud Native technologies (Kubernetes and Docker) (Jan 2024 - Feb 2024)
+CERTIFICATIONS AND AWARDS
+- Rolls-Royce Excellence Award (for delivering a production RAG chatbot ahead of schedule).
+- AWS Machine Learning Foundations (2024).
+- Professional Certificate in Cloud Native Technologies — Kubernetes and Docker (2024).

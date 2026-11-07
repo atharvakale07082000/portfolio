@@ -6,6 +6,9 @@ export const maxDuration = 30;
 
 export async function POST(req: Request) {
     try {
+        if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+            return new Response("The chat assistant is not configured.", { status: 503 });
+        }
         const { messages } = await req.json();
         const lastMessage = messages[messages.length - 1];
 
