@@ -10,6 +10,7 @@ import Menu from "@/components/chrome/Menu";
 import ChatLauncher from "@/components/chat/ChatLauncher";
 import { profile } from "@/lib/content";
 import { BOOT_KEY } from "@/lib/boot";
+import { Analytics } from "@vercel/analytics/next";
 
 /* Fonts are vendored (Latin subset) so the build never needs a CDN and the
    browser never makes a third-party request. Both are small and preloaded. */
@@ -101,6 +102,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                     <Menu />
                     <ChatLauncher />
                 </SmoothScroll>
+                <Analytics />
             </body>
         </html>
     );
